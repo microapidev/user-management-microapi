@@ -172,6 +172,21 @@ const company = {
         catch(err){
             errHandler(err, res)
         }
+    },
+    
+    removeUserFromCompany: async (req,res) => {
+        const {companyId, userId} = req.params;
+        const company = await companyModel.findById(companyId);
+        
+        if(!company) return res.status(404).json({status:"failed", message:"Company not found", data:null});
+
+        try{
+        company.users.pull({_id : userId});
+        await company.save();
+        res.status(200).json({ status: "Success", message: "User Deleted.", data: company });
+        } catch (err){
+            errHandler(err, res);
+        }
     }
 };
 module.exports = company;
