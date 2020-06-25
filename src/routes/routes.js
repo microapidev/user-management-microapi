@@ -99,10 +99,10 @@ router.put(
 router.delete("/users/:id/avatar", auth, newUser.removeUserAvatar);
 
 //Get self
-router.get("/users/me", auth, newUser.getMe);
+router.get("/me", auth, newUser.getMe);
 
 //Delete self
-router.delete("/users/me", auth, newUser.deleteMe);
+router.delete("/me", auth, newUser.deleteMe);
 
 //Add user to a team
 //done

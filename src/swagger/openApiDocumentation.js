@@ -29,6 +29,74 @@ const openApiDocumentation = {
     bearerAuth: {},
   },
   paths: {
+    "/v1/me": {
+      get: {
+        tags: ["CRUD Operations"],
+        description: "Get ServiceUser Account",
+        operationId: "getSelf",
+        security: [
+          {
+            bearerAuth: {},
+          },
+        ],
+        parameters: [],
+        responses: {
+          "200": {
+            description: "Success",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Response",
+                },
+              },
+            },
+          },
+          "400": {
+            description: "Bad Request",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Response",
+                },
+              },
+            },
+          },
+        },
+      },
+      delete: {
+        tags: ["CRUD Operations"],
+        description: "Delete ServiceUser Account",
+        operationId: "deleteSelf",
+        security: [
+          {
+            bearerAuth: {},
+          },
+        ],
+        parameters: [],
+        responses: {
+          "200": {
+            description: "Success",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Response",
+                },
+              },
+            },
+          },
+          "400": {
+            description: "Bad Request",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Response",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
     "/v1/addServiceUser": {
       post: {
         tags: ["API Auth"],
@@ -162,74 +230,6 @@ const openApiDocumentation = {
           },
           required: true,
         },
-        responses: {
-          "200": {
-            description: "Success",
-            content: {
-              "application/json": {
-                schema: {
-                  $ref: "#/components/schemas/Response",
-                },
-              },
-            },
-          },
-          "400": {
-            description: "Bad Request",
-            content: {
-              "application/json": {
-                schema: {
-                  $ref: "#/components/schemas/Response",
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-    "/v1/users/me": {
-      get: {
-        tags: ["CRUD Operations"],
-        description: "Get User Account",
-        operationId: "getSelf",
-        security: [
-          {
-            bearerAuth: {},
-          },
-        ],
-        parameters: [],
-        responses: {
-          "200": {
-            description: "Success",
-            content: {
-              "application/json": {
-                schema: {
-                  $ref: "#/components/schemas/Response",
-                },
-              },
-            },
-          },
-          "400": {
-            description: "Bad Request",
-            content: {
-              "application/json": {
-                schema: {
-                  $ref: "#/components/schemas/Response",
-                },
-              },
-            },
-          },
-        },
-      },
-      delete: {
-        tags: ["CRUD Operations"],
-        description: "Delete User Account",
-        operationId: "deleteSelf",
-        security: [
-          {
-            bearerAuth: {},
-          },
-        ],
-        parameters: [],
         responses: {
           "200": {
             description: "Success",

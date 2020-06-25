@@ -45,20 +45,18 @@ const user = {
 
   deleteMe: async (req, res) => {
     try {
-      const user = await userModel.findByIdAndDelete({ _id: req.user._id });
+      const user = await req.user.remove();
       if (!user)
         return res.status(404).json({
           status: "Failed",
           message: "Delete failed: user not found",
           data: null,
         });
-      res
-        .status(200)
-        .json({
-          status: "Success",
-          message: "Account deleted successfully!",
-          data: null,
-        });
+      res.status(200).json({
+        status: "Success",
+        message: "Account deleted successfully!",
+        data: null,
+      });
     } catch (err) {
       errHandler(err, res);
     }
