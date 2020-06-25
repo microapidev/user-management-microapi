@@ -97,6 +97,10 @@ router.delete('/users/:id/avatar',auth, newUser.removeUserAvatar);
 //done
 router.post('/companies/teams/:teamId/users/:userId', auth, company.setUserTeam);
 
+//Delete user from a team
+//done
+router.delete('/companies/teams/:teamId/users/:userId', auth, company.removeUserTeam);
+
 //Get a users team
 //done
 router.get('/companies/teams/users/:id',auth, company.getUserTeam);
