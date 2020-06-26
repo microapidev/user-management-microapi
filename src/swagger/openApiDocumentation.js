@@ -29,6 +29,74 @@ const openApiDocumentation = {
     bearerAuth: {},
   },
   paths: {
+    "/v1/me": {
+      get: {
+        tags: ["CRUD Operations"],
+        description: "Get ServiceUser Account",
+        operationId: "getSelf",
+        security: [
+          {
+            bearerAuth: {},
+          },
+        ],
+        parameters: [],
+        responses: {
+          "200": {
+            description: "Success",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Response",
+                },
+              },
+            },
+          },
+          "400": {
+            description: "Bad Request",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Response",
+                },
+              },
+            },
+          },
+        },
+      },
+      delete: {
+        tags: ["CRUD Operations"],
+        description: "Delete ServiceUser Account",
+        operationId: "deleteSelf",
+        security: [
+          {
+            bearerAuth: {},
+          },
+        ],
+        parameters: [],
+        responses: {
+          "200": {
+            description: "Success",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Response",
+                },
+              },
+            },
+          },
+          "400": {
+            description: "Bad Request",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Response",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
     "/v1/addServiceUser": {
       post: {
         tags: ["API Auth"],
@@ -162,74 +230,6 @@ const openApiDocumentation = {
           },
           required: true,
         },
-        responses: {
-          "200": {
-            description: "Success",
-            content: {
-              "application/json": {
-                schema: {
-                  $ref: "#/components/schemas/Response",
-                },
-              },
-            },
-          },
-          "400": {
-            description: "Bad Request",
-            content: {
-              "application/json": {
-                schema: {
-                  $ref: "#/components/schemas/Response",
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-    "/v1/users/me": {
-      get: {
-        tags: ["CRUD Operations"],
-        description: "Get User Account",
-        operationId: "getSelf",
-        security: [
-          {
-            bearerAuth: {},
-          },
-        ],
-        parameters: [],
-        responses: {
-          "200": {
-            description: "Success",
-            content: {
-              "application/json": {
-                schema: {
-                  $ref: "#/components/schemas/Response",
-                },
-              },
-            },
-          },
-          "400": {
-            description: "Bad Request",
-            content: {
-              "application/json": {
-                schema: {
-                  $ref: "#/components/schemas/Response",
-                },
-              },
-            },
-          },
-        },
-      },
-      delete: {
-        tags: ["CRUD Operations"],
-        description: "Delete User Account",
-        operationId: "deleteSelf",
-        security: [
-          {
-            bearerAuth: {},
-          },
-        ],
-        parameters: [],
         responses: {
           "200": {
             description: "Success",
@@ -1616,11 +1616,12 @@ const openApiDocumentation = {
         },
       },
     },
-    "/v1/companies/{companyId}/remove/users/{userId}": {
-      patch: {
+    "/v1/companies/teams/{teamId}/users/{userId}": {
+      delete: {
         tags: ["Company CRUD Operations"],
-        description: "Remove User From A Company",
-        operationId: "removeUserFromCompany",
+        description: "Remove User from a Team",
+        operationId: "removeUserFromTeam",
+
         security: [
           {
             bearerAuth: {},
@@ -1628,7 +1629,7 @@ const openApiDocumentation = {
         ],
         parameters: [
           {
-            name: "companyId",
+            name: "teamId",
             in: "path",
             schema: {
               type: "string",

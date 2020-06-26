@@ -1,6 +1,5 @@
 const jwtUtil = require("jsonwebtoken");
 const serviceUser = require("../models/service_user");
-const User = require("../models/user");
 
 const auth = async (req, res, next) => {
   try {
@@ -11,16 +10,14 @@ const auth = async (req, res, next) => {
     if (!user) {
       throw new Error("");
     }
-    req.user = await User.findOne({ email: decoded.email });
+    req.user = user;
     next();
   } catch (e) {
-    res
-      .status(401)
-      .json({
-        status: "UnAuthorized",
-        message: "Request Not permitted",
-        data: null,
-      });
+    res.status(401).json({
+      status: "UnAuthorized",
+      message: "Request Not permitted",
+      data: null,
+    });
   }
 };
 

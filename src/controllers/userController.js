@@ -45,20 +45,18 @@ const user = {
 
   deleteMe: async (req, res) => {
     try {
-      const user = await userModel.findByIdAndDelete({ _id: req.user._id });
+      const user = await req.user.remove();
       if (!user)
         return res.status(404).json({
           status: "Failed",
           message: "Delete failed: user not found",
           data: null,
         });
-      res
-        .status(200)
-        .json({
-          status: "Success",
-          message: "Account deleted successfully!",
-          data: null,
-        });
+      res.status(200).json({
+        status: "Success",
+        message: "Account deleted successfully!",
+        data: null,
+      });
     } catch (err) {
       errHandler(err, res);
     }
@@ -409,6 +407,41 @@ const user = {
       errHandler(err, res);
     }
   },
+  activateUsers: async (req, res) => {
+        try{
+            const users =  await userModel.findOne({_id: req.params.id})
+            if(!users) {
+                return res.status(404).send({
+                    message: "User not found with id " + req.params.companyId
+                })
+            }
+            else{
+                user.status='ACTIVE'
+                res.json({status: 'Success', message: 'User Activated', data: user.status})
+            }
+        }
+        catch(err){
+            errHandler(err, res)
+        }
+    },
+
+    deActivateUsers: async (req, res) => {
+        try{
+            const users =  await userModel.findOne({_id: req.params.id})
+            if(!users) {
+                return res.status(404).send({
+                    message: "User not found with id " + req.params.companyId
+                })
+            }
+            else{
+                user.status='INACTIVE'
+                res.json({status: 'Success', message: 'User Deactivated', data: user.status})
+            }
+        }
+        catch(err){
+            errHandler(err, res)
+        }
+    },
   getUserGender: async (req, res) => {
     try {
       const user = await userModel.findOne({ _id: req.params.id });
