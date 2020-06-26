@@ -35,6 +35,50 @@ const UserSchema = new Schema({
         if (/[^\d]/.test(value)) {
           throw new Error('One or more invalid characters. Numbers only');
         }
+    },
+    age: {
+        type: Number,
+        default: 0,
+        validate(value){
+			if(value < 0) {
+                throw new Error('Age must be a positive number');
+            }
+		}
+    },
+    address: {
+        type: String,
+        trim: true,
+    },
+    gender: { 
+        type: String,
+        enum: ['male', 'female'],
+        required: true
+    },
+    status: { 
+        type: String,
+        enum: ['ACTIVE', 'INACTIVE'],
+        default: 'ACTIVE'
+    },
+    updated: { 
+        type: Date,
+    },
+    avatar: {
+		type: Buffer
+    },
+    url: {
+        type: String,
+        default: "N/A"
+    },
+    team:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'team'
+    },
+    company:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'company'
+    },
+    otp:{
+        type: String,
         //subject to change to a custom response later
         throw new Error('Phone number should consist of 11 to 13 numbers');
       }
