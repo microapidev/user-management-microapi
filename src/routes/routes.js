@@ -141,5 +141,9 @@ router.get('/companies/team/:id/users', auth, company.getTeamMembers);
 //done
 router.get('/companies/:id/teams', auth, company.getAllTeams);
 
+//Delete team from a comapny
+//done
+router.delete('/companies/:companyId/teams/:teamId', auth, company.removeUserTeam);
+
 
 module.exports= router;
