@@ -3,6 +3,7 @@ const sharp = require("sharp");
 
 const userModel = require("../models/user");
 const serviceUser = require("../models/service_user");
+const { TeamInviteModel } = require("../models/invite");
 const jwtUtil = require("../security/jwtAuth");
 const { errHandler } = require("../handlers/errorHandlers");
 
@@ -408,40 +409,40 @@ const user = {
     }
   },
   activateUsers: async (req, res) => {
-        try{
-            const users =  await userModel.findOne({_id: req.params.id})
-            if(!users) {
-                return res.status(404).send({
-                    message: "User not found with id " + req.params.companyId
-                })
-            }
-            else{
-                user.status='ACTIVE'
-                res.json({status: 'Success', message: 'User Activated', data: user.status})
-            }
-        }
-        catch(err){
-            errHandler(err, res)
-        }
-    },
+    try {
+      const users = await userModel.findOne({ _id: req.params.id })
+      if (!users) {
+        return res.status(404).send({
+          message: "User not found with id " + req.params.companyId
+        })
+      }
+      else {
+        user.status = 'ACTIVE'
+        res.json({ status: 'Success', message: 'User Activated', data: user.status })
+      }
+    }
+    catch (err) {
+      errHandler(err, res)
+    }
+  },
 
-    deActivateUsers: async (req, res) => {
-        try{
-            const users =  await userModel.findOne({_id: req.params.id})
-            if(!users) {
-                return res.status(404).send({
-                    message: "User not found with id " + req.params.companyId
-                })
-            }
-            else{
-                user.status='INACTIVE'
-                res.json({status: 'Success', message: 'User Deactivated', data: user.status})
-            }
-        }
-        catch(err){
-            errHandler(err, res)
-        }
-    },
+  deActivateUsers: async (req, res) => {
+    try {
+      const users = await userModel.findOne({ _id: req.params.id })
+      if (!users) {
+        return res.status(404).send({
+          message: "User not found with id " + req.params.companyId
+        })
+      }
+      else {
+        user.status = 'INACTIVE'
+        res.json({ status: 'Success', message: 'User Deactivated', data: user.status })
+      }
+    }
+    catch (err) {
+      errHandler(err, res)
+    }
+  },
   getUserGender: async (req, res) => {
     try {
       const user = await userModel.findOne({ _id: req.params.id });
@@ -631,6 +632,36 @@ const user = {
       errHandler(err, res);
     }
   },
+  inviteUserToTeam: async (req, res) => {
+    try {
+      const { userId, teamId, invitedUserId } = req.params;
+      if (userId === invitedUserId) throw new Error("Cannot invite self");
+
+      const newInvite = await new TeamInviteModel({
+        userId,
+        teamId,
+        invitedUserId
+      });
+
+
+      newInvite
+        .save()
+        .then((invite) => {
+          res.status(200).json({
+            status: "Success",
+            message: `Invite request sent to User`,
+            data: invite,
+          });
+        })
+        .catch((e) => {
+          throw new Error(e.message);
+        });
+
+
+    } catch (err) {
+      errHandler(err, res);
+    }
+  }
 };
 
 module.exports = user;
