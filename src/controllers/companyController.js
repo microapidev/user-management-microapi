@@ -173,6 +173,22 @@ const company = {
             errHandler(err, res)
         }
     },
+    
+    removeUserFromCompany: async (req,res) => {
+        const {companyId, userId} = req.params;
+        const company = await companyModel.findById(companyId);
+        
+        if(!company) return res.status(404).json({status:"failed", message:"Company not found", data:null});
+
+        try{
+        company.users.pull({_id : userId});
+        await company.save();
+        res.status(200).json({ status: "Success", message: "User Deleted.", data: company });
+        } catch (err){
+            errHandler(err, res);
+        }
+    },
+
     removeUserTeam: async (req, res) => {
 
         const userId = req.params.userId
@@ -199,30 +215,5 @@ const company = {
             errHandler(err, res)
         }
     },
-    removeTeam: (req, res) =>{
-        const userId = req.params.userId
-        const teamId = req.params.teamId
-
-        try{
-            const team = await teamModel.findOne({_id:teamId})
-            const user = await userModel.findById(userId)
-
-            if(!user) return res.status(404).json({status: 'Failed', message:'User not found',  data: null })
-            if(!team) return res.status(404).json({status: 'Failed', message:'Team not found',  data: null })
-
-            user.team = null;
-            await user.save();
-
-            const teamResult = await teamModel.updateOne({ _id: teamId },  { $pull: { users: userId} }, {new: true, useFindAndModify: false});
-            if (teamResult.nModified == 0) {
-                return res.status(500).json({status: 'Failed', message:'Failed to remove user from team',  data: null })
-            }
-
-            return res.status(200).json({status: 'Success', message:'Successfully removed user',  data: null })
-        }
-        catch(err){
-            errHandler(err, res)
-        }
-    }
 };
 module.exports = company;
