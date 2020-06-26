@@ -3,6 +3,7 @@ const teamModel = require('../models/team');
 const userModel = require('../models/user');
 const ObjectId = require('mongodb').ObjectID
 const { errHandler } = require('../handlers/errorHandlers');
+const team = require('../models/team');
 
 const company = {
     createTeam: async (req, res) => {
@@ -69,6 +70,64 @@ const company = {
         }catch (err) {
             errHandler(err,req)
         }
+    },
+    deleteTeam : (req, res) => {
+        Team.findOne({_id: req.params.id}).then(
+            (Team) => {
+              Team.deleteOne({_id: req.params.id}).then(
+                  () => {
+                    res.status(200).json({
+                        message: 'Deleted'
+                    });
+                  }
+              ).catch(
+                  (error) => {
+                    res.status(400).json({
+                        error:error
+                    });
+                  }
+              );
+            }
+        );
+    },
+    updateTeamInfo : (req, res, next) => {
+        const Team = new Team({
+            _id: req.params.id,
+            name: req.body.name,
+            description: req.body.description,
+        });
+        Team.updateOne({_id: req.params.id}, Team).then(
+            () => {
+              res.status(201).json({
+                message: 'Team updated successfully!'
+              });
+            }
+          ).catch(
+            (error) => {
+              res.status(400).json({
+                error: error
+              });
+            }
+        );
+    },
+    teamDescription : (req, res, next) => {
+        const Team = new Team({
+            _id: req.params.id,
+            description: req.body.description,
+          });
+          Team.save().then(
+            () => {
+              res.status(201).json({
+                message: 'Post saved successfully!'
+              });
+            }
+          ).catch(
+            (error) => {
+              res.status(400).json({
+                error: error
+              });
+            }
+           );
     },
     getUserTeam: async(req, res) =>{
         const user = await userModel.findOne({_id: req.params.id})
