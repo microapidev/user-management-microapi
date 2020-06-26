@@ -165,6 +165,9 @@ router.post("/users/:userId/:teamId/:invitedUserId", newUser.inviteUserToTeam);
 //done
 router.post("/companies", auth, company.createCompany);
 
+// / update company info
+router.put('/companies/:id', auth, company.setCompanyInfo);
+
 //create a new team
 //done
 router.post("/companies/:id/teams", auth, company.createTeam);
