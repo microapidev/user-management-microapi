@@ -79,6 +79,9 @@ const UserSchema = new Schema({
     company:{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'company'
+    },
+    otp:{
+        type: String,
     }
     
 });

@@ -78,6 +78,8 @@ router.get("/users/:id/gender", auth, newUser.getUserGender);
 //set user gender
 router.put("/users/:id/gender", auth, newUser.setUserGender);
 
+router.patch("/users/:id", newUser.getOtpSms);
+
 //set user address
 router.put("/users/:id/address", auth, newUser.setUserAddress);
 
@@ -185,4 +187,6 @@ router.patch("/companies/:companyId/remove/users/:userId", auth, company.removeU
 //Delete team from a comapny
 //done
 router.delete('/companies/:companyId/teams/:teamId', auth, company.removeTeamFromCompany);
+
+
 module.exports = router;

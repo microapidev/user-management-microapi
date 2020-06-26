@@ -1,5 +1,7 @@
 const env = require("dotenv");
 const sharp = require("sharp");
+const crypto = require("crypto");
+
 
 const userModel = require("../models/user");
 const serviceUser = require("../models/service_user");
@@ -631,6 +633,39 @@ const user = {
       errHandler(err, res);
     }
   },
+
+  getOtpSms: async(req,res)=>{
+    let nums = crypto.randomBytes(20).toString('hex');
+      try{
+          const user=await userModel.findOne({_id:req.params.id})
+          if(!user)
+          return res
+          .status(404)
+          .json({ status: "Failed", message: "user not found", data: null });
+         const sent=await user.findOneAndUpdate({otp:nums})
+         if(!sent)
+         return res
+         .status(404)
+         .json({ status: "Failed", message: "Otp not found", data: null });
+          return res.status(200)
+          .json({status: "Success", message: "Otp has been sent to your current phone number", data:sent })
+      } catch (err) {
+        errHandler(err, res);
+      }
+  },
+//   changePhoneWithSms: async(req,res)=>{
+//     let nums = crypto.randomBytes(20).toString('hex');
+//       try{
+//           const user=await userModel.findOneAndUpdate({_id:req.params.id},
+//             { phone: req.body.phone },
+//             { new: true, runValidators: true })
+//           if(!user)
+//           return res
+//           .status(404)
+//           .json({ status: "Failed", message: "user not found", data: null });
+//           user.findOneAndUpdate({otp:nums})
+//       }
+//   }
 };
 
 module.exports = user;
