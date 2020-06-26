@@ -89,8 +89,9 @@ const UserSchema = new Schema({
 //updated_at should be the current time only when updated
 UserSchema.pre('save', function(next) {
   this.updated_at = Date.now();
+
+  // Add user timezone
   this.timezone = moment.tz.guess();
-  console.log(this.timezone);
   next();
 });
 
