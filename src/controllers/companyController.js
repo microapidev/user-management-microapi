@@ -124,6 +124,23 @@ const company = {
         }
 
     },
+    
+    deleteCompany: async (req, res) => {
+        companyModel.findByIdAndRemove(req.params.companyId)
+        .then(transaction => {
+            if(!transaction) {
+                return res.status(404).send({
+                    message: "Company not found with id " + req.params.companyId
+                })
+            }
+            else{
+            res.send({message: "Company deleted successfully! " + req.params.companyId});
+        }}).catch(err => {
+            errHandler(err, res)
+            
+        })
+    },
+    
     setUserCompany: async (req, res) =>{
 
         const userId = req.params.userId

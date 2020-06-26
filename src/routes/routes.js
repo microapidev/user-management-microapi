@@ -24,6 +24,12 @@ router.get("/users", auth, newUser.getAllUsers);
 //Get User
 router.get("/users/:id", auth, newUser.getUser);
 
+//Activate User
+router.put('/users/activate/:userId',auth, newUser.activateUsers);
+
+//Deactivate User
+router.put('/users/activate/:userId',auth, newUser.deActivateUsers);
+
 //Get first name
 router.get("/users/:id/firstName", auth, newUser.getUserFirstName);
 
@@ -123,6 +129,11 @@ router.get("/companies/teams/users/:id", auth, company.getUserTeam);
 //Get a users company
 //done
 router.get("/companies/user/:id", auth, company.getUserCompany);
+
+//Delete company by Id
+//done
+router.delete('/companies/delete/:companyId', auth, company.deleteCompany);
+
 
 //Add user to a company
 //done
