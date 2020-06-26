@@ -156,4 +156,12 @@ router.get("/companies/team/:id/users", auth, company.getTeamMembers);
 //done
 router.get("/companies/:id/teams", auth, company.getAllTeams);
 
+//delete team
+//done
+router.delete("/companies/:id/teams/:id", auth,company.deleteTeam);
+ //update team info done
+router.put("/compamies/:id/teams/:id", auth, company.updateTeamInfo);
+
+//set team description done
+router.post("/companies/:id/teams/:id", auth, company.teamDescription);
 module.exports = router;

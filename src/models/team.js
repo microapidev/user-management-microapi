@@ -8,6 +8,9 @@ const TeamSchema = new Schema({
         required: true,
         trim: true
     },
+    description: {
+        type: String,
+    },
     users: [{
         type: mongoose.Schema.Types.ObjectId, ref: 'user',
         unique: true,
