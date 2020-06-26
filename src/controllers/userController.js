@@ -5,7 +5,6 @@ const userModel = require( '../models/user');
 const serviceUser = require('../models/service_user')
 const jwtUtil = require('../security/jwtAuth')
 const { errHandler } = require('../handlers/errorHandlers');
-const { use } = require('../routes/routes');
 
 env.config();
 
