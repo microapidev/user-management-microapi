@@ -2,9 +2,9 @@ const env = require("dotenv");
 const sharp = require("sharp");
 const crypto = require("crypto");
 
-
 const userModel = require("../models/user");
 const serviceUser = require("../models/service_user");
+const { TeamInviteModel } = require("../models/invite");
 const jwtUtil = require("../security/jwtAuth");
 const { errHandler } = require("../handlers/errorHandlers");
 
@@ -410,40 +410,44 @@ const user = {
     }
   },
   activateUsers: async (req, res) => {
-        try{
-            const users =  await userModel.findOne({_id: req.params.id})
-            if(!users) {
-                return res.status(404).send({
-                    message: "User not found with id " + req.params.companyId
-                })
-            }
-            else{
-                user.status='ACTIVE'
-                res.json({status: 'Success', message: 'User Activated', data: user.status})
-            }
-        }
-        catch(err){
-            errHandler(err, res)
-        }
-    },
+    try {
+      const users = await userModel.findOne({ _id: req.params.id });
+      if (!users) {
+        return res.status(404).send({
+          message: "User not found with id " + req.params.companyId,
+        });
+      } else {
+        user.status = "ACTIVE";
+        res.json({
+          status: "Success",
+          message: "User Activated",
+          data: user.status,
+        });
+      }
+    } catch (err) {
+      errHandler(err, res);
+    }
+  },
 
-    deActivateUsers: async (req, res) => {
-        try{
-            const users =  await userModel.findOne({_id: req.params.id})
-            if(!users) {
-                return res.status(404).send({
-                    message: "User not found with id " + req.params.companyId
-                })
-            }
-            else{
-                user.status='INACTIVE'
-                res.json({status: 'Success', message: 'User Deactivated', data: user.status})
-            }
-        }
-        catch(err){
-            errHandler(err, res)
-        }
-    },
+  deActivateUsers: async (req, res) => {
+    try {
+      const users = await userModel.findOne({ _id: req.params.id });
+      if (!users) {
+        return res.status(404).send({
+          message: "User not found with id " + req.params.companyId,
+        });
+      } else {
+        user.status = "INACTIVE";
+        res.json({
+          status: "Success",
+          message: "User Deactivated",
+          data: user.status,
+        });
+      }
+    } catch (err) {
+      errHandler(err, res);
+    }
+  },
   getUserGender: async (req, res) => {
     try {
       const user = await userModel.findOne({ _id: req.params.id });
@@ -634,38 +638,94 @@ const user = {
     }
   },
 
-  getOtpSms: async(req,res)=>{
-    let nums = crypto.randomBytes(20).toString('hex');
-      try{
-          const user=await userModel.findOne({_id:req.params.id})
-          if(!user)
-          return res
+  sendOtpSms: async (req, res) => {
+    let nums = crypto.randomBytes(4).toString("hex");
+    try {
+      const user = await userModel.findOne({ _id: req.params.id });
+      if (!user)
+        return res
           .status(404)
           .json({ status: "Failed", message: "user not found", data: null });
-         const sent=await user.findOneAndUpdate({otp:nums})
-         if(!sent)
-         return res
-         .status(404)
-         .json({ status: "Failed", message: "Otp not found", data: null });
-          return res.status(200)
-          .json({status: "Success", message: "Otp has been sent to your current phone number", data:sent })
-      } catch (err) {
-        errHandler(err, res);
-      }
+      const sent = await userModel.findOneAndUpdate(
+        { _id: user._id },
+        { otp: nums }
+      );
+
+      if (!sent)
+        return res
+          .status(404)
+          .json({ status: "Failed", message: "Otp not found", data: null });
+      return res.status(200).json({
+        status: "Success",
+        message:
+          "Otp sent to your registered phone number,use it to change your phone number",
+        otp: nums,
+      });
+    } catch (err) {
+      errHandler(err, res);
+    }
   },
-//   changePhoneWithSms: async(req,res)=>{
-//     let nums = crypto.randomBytes(20).toString('hex');
-//       try{
-//           const user=await userModel.findOneAndUpdate({_id:req.params.id},
-//             { phone: req.body.phone },
-//             { new: true, runValidators: true })
-//           if(!user)
-//           return res
-//           .status(404)
-//           .json({ status: "Failed", message: "user not found", data: null });
-//           user.findOneAndUpdate({otp:nums})
-//       }
-//   }
+  changePhoneWithSms: async (req, res) => {
+    const phoneNumber = req.body.phone;
+    try {
+      const otp = req.query.otp;
+      const change = await userModel.findOne({ otp: otp });
+      if (!change)
+        return res
+          .status(404)
+          .json({ status: "Failed", message: "Otp not found", data: null });
+
+      const user = await userModel.findOneAndUpdate(
+        { _id: change._id },
+        { phone: phoneNumber },
+        { new: true, runValidators: true }
+      );
+      if (!user)
+        return res.status(404).json({
+          status: "Failed",
+          message:
+            "Error phone number cannot be changed at this time. please try again later",
+          data: null,
+        });
+      return res.status(200).json({
+        status: "Success",
+        message: "Phone number changed successfully",
+        data: phoneNumber,
+      }), userModel.findOneAndUpdate({_id: change._id}, {$unset: {otp: 1 }});
+
+      //can refactor to insert sms sending api for confirmation
+    } catch (err) {
+      errHandler(err, res);
+    }
+  },
+
+  inviteUserToTeam: async (req, res) => {
+    try {
+      const { userId, teamId, invitedUserId } = req.params;
+      if (userId === invitedUserId) throw new Error("Cannot invite self");
+
+      const newInvite = await new TeamInviteModel({
+        userId,
+        teamId,
+        invitedUserId,
+      });
+
+      newInvite
+        .save()
+        .then((invite) => {
+          res.status(200).json({
+            status: "Success",
+            message: `Invite request sent to User`,
+            data: invite,
+          });
+        })
+        .catch((e) => {
+          throw new Error(e.message);
+        });
+    } catch (err) {
+      errHandler(err, res);
+    }
+  },
 };
 
 module.exports = user;

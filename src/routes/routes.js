@@ -25,10 +25,10 @@ router.get("/users", auth, newUser.getAllUsers);
 router.get("/users/:id", auth, newUser.getUser);
 
 //Activate User
-router.put('/users/activate/:userId',auth, newUser.activateUsers);
+router.put('/users/activate/:userId', auth, newUser.activateUsers);
 
 //Deactivate User
-router.put('/users/activate/:userId',auth, newUser.deActivateUsers);
+router.put('/users/activate/:userId', auth, newUser.deActivateUsers);
 
 //Get first name
 router.get("/users/:id/firstName", auth, newUser.getUserFirstName);
@@ -78,7 +78,11 @@ router.get("/users/:id/gender", auth, newUser.getUserGender);
 //set user gender
 router.put("/users/:id/gender", auth, newUser.setUserGender);
 
-router.patch("/users/:id", newUser.getOtpSms);
+//send otp to registered phonenumber
+router.put("/users/sms/:id", auth, newUser.sendOtpSms);
+
+//use otp to change phone number
+router.patch("/users/changephone/:id", auth, newUser.changePhoneWithSms);
 
 //set user address
 router.put("/users/:id/address", auth, newUser.setUserAddress);
@@ -144,6 +148,9 @@ router.post(
   auth,
   company.setUserCompany
 );
+
+//Invite a user to a team
+router.post("/users/:userId/:teamId/:invitedUserId", newUser.inviteUserToTeam);
 
 //Create new company
 //done
