@@ -3,6 +3,7 @@ const teamModel = require('../models/team');
 const userModel = require('../models/user');
 const ObjectId = require('mongodb').ObjectID
 const { errHandler } = require('../handlers/errorHandlers');
+const team = require('../models/team');
 
 const company = {
     createTeam: async (req, res) => {
@@ -70,6 +71,64 @@ const company = {
             errHandler(err,req)
         }
     },
+    deleteTeam : (req, res) => {
+        Team.findOne({_id: req.params.id}).then(
+            (Team) => {
+              Team.deleteOne({_id: req.params.id}).then(
+                  () => {
+                    res.status(200).json({
+                        message: 'Deleted'
+                    });
+                  }
+              ).catch(
+                  (error) => {
+                    res.status(400).json({
+                        error:error
+                    });
+                  }
+              );
+            }
+        );
+    },
+    updateTeamInfo : (req, res, next) => {
+        const Team = new Team({
+            _id: req.params.id,
+            name: req.body.name,
+            description: req.body.description,
+        });
+        Team.updateOne({_id: req.params.id}, Team).then(
+            () => {
+              res.status(201).json({
+                message: 'Team updated successfully!'
+              });
+            }
+          ).catch(
+            (error) => {
+              res.status(400).json({
+                error: error
+              });
+            }
+        );
+    },
+    teamDescription : (req, res, next) => {
+        const Team = new Team({
+            _id: req.params.id,
+            description: req.body.description,
+          });
+          Team.save().then(
+            () => {
+              res.status(201).json({
+                message: 'Post saved successfully!'
+              });
+            }
+          ).catch(
+            (error) => {
+              res.status(400).json({
+                error: error
+              });
+            }
+           );
+    },
     getUserTeam: async(req, res) =>{
         const user = await userModel.findOne({_id: req.params.id})
         if(!user) return res.status(404).json({status: 'Failed', message: "User not found", data: null })
@@ -124,6 +183,23 @@ const company = {
         }
 
     },
+    
+    deleteCompany: async (req, res) => {
+        companyModel.findByIdAndRemove(req.params.companyId)
+        .then(transaction => {
+            if(!transaction) {
+                return res.status(404).send({
+                    message: "Company not found with id " + req.params.companyId
+                })
+            }
+            else{
+            res.send({message: "Company deleted successfully! " + req.params.companyId});
+        }}).catch(err => {
+            errHandler(err, res)
+            
+        })
+    },
+    
     setUserCompany: async (req, res) =>{
 
         const userId = req.params.userId
@@ -186,6 +262,57 @@ const company = {
         res.status(200).json({ status: "Success", message: "User Deleted.", data: company });
         } catch (err){
             errHandler(err, res);
+        }
+    },
+
+    removeUserTeam: async (req, res) => {
+
+        const userId = req.params.userId
+        const teamId = req.params.teamId
+
+        try{
+            const team = await teamModel.findOne({_id:teamId})
+            const user = await userModel.findById(userId)
+
+            if(!user) return res.status(404).json({status: 'Failed', message:'User not found',  data: null })
+            if(!team) return res.status(404).json({status: 'Failed', message:'Team not found',  data: null })
+
+            user.team = null;
+            await user.save();
+
+            const teamResult = await teamModel.updateOne({ _id: teamId },  { $pull: { users: userId} }, {new: true, useFindAndModify: false});
+            if (teamResult.nModified == 0) {
+                return res.status(500).json({status: 'Failed', message:'Failed to remove user from team',  data: null })
+            }
+
+            return res.status(200).json({status: 'Success', message:'Successfully removed user',  data: null })
+        }
+        catch(err){
+            errHandler(err, res)
+        }
+    },
+
+    removeTeamFromCompany: async (req, res) => {
+
+        const companyId = req.params.companyId
+        const teamId = req.params.teamId
+
+        try{
+            const team = await teamModel.findOne({_id:teamId})
+            const company = await companyModel.findById(userId)
+
+            if(!company) return res.status(404).json({status: 'Failed', message:'Company not found',  data: null })
+            if(!team) return res.status(404).json({status: 'Failed', message:'Team not found',  data: null })
+
+            const companyResult = await companyModel.updateOne({ _id: companyId },  { $pull: { teams: teamId} }, {new: true, useFindAndModify: false});
+            if (companyResult.nModified == 0) {
+                return res.status(500).json({status: 'Failed', message:'Failed to remove team from company',  data: null })
+            }
+
+            return res.status(200).json({status: 'Success', message:'Successfully removed team',  data: null })
+        }
+        catch(err){
+            errHandler(err, res)
         }
     }
 };
