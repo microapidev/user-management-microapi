@@ -232,5 +232,29 @@ const company = {
             errHandler(err, res)
         }
     },
+
+    removeTeamFromCompany: async (req, res) => {
+
+        const companyId = req.params.companyId
+        const teamId = req.params.teamId
+
+        try{
+            const team = await teamModel.findOne({_id:teamId})
+            const company = await companyModel.findById(userId)
+
+            if(!company) return res.status(404).json({status: 'Failed', message:'Company not found',  data: null })
+            if(!team) return res.status(404).json({status: 'Failed', message:'Team not found',  data: null })
+
+            const companyResult = await companyModel.updateOne({ _id: companyId },  { $pull: { teams: teamId} }, {new: true, useFindAndModify: false});
+            if (companyResult.nModified == 0) {
+                return res.status(500).json({status: 'Failed', message:'Failed to remove team from company',  data: null })
+            }
+
+            return res.status(200).json({status: 'Success', message:'Successfully removed team',  data: null })
+        }
+        catch(err){
+            errHandler(err, res)
+        }
+    }
 };
 module.exports = company;

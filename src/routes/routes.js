@@ -176,6 +176,6 @@ router.patch("/companies/:companyId/remove/users/:userId", auth, company.removeU
 
 //Delete team from a comapny
 //done
-router.delete('/companies/:companyId/teams/:teamId', auth, company.removeUserTeam);
+router.delete('/companies/:companyId/teams/:teamId', auth, company.removeTeamFromCompany);
 
 module.exports = router;
