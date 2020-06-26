@@ -178,4 +178,6 @@ router.patch("/companies/:companyId/remove/users/:userId", auth, company.removeU
 //done
 router.delete('/companies/:companyId/teams/:teamId', auth, company.removeTeamFromCompany);
 
+
+
 module.exports = router;

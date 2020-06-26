@@ -630,7 +630,8 @@ const user = {
     } catch (err) {
       errHandler(err, res);
     }
-  },
+  }
+
 };
 
 module.exports = user;
