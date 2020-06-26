@@ -71,7 +71,7 @@ const company = {
             errHandler(err,req)
         }
     },
-    deleteTeam = (req, res) => {
+    deleteTeam : (req, res) => {
         Team.findOne({_id: req.params.id}).then(
             (Team) => {
               Team.deleteOne({_id: req.params.id}).then(
@@ -90,7 +90,7 @@ const company = {
             }
         );
     },
-    updateTeamInfo = (req, res, next) => {
+    updateTeamInfo : (req, res, next) => {
         const Team = new Team({
             _id: req.params.id,
             name: req.body.name,
@@ -110,7 +110,7 @@ const company = {
             }
         );
     },
-    teamDescription = (req, res, next) => {
+    teamDescription : (req, res, next) => {
         const Team = new Team({
             _id: req.params.id,
             description: req.body.description,
