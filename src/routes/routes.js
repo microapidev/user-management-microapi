@@ -118,6 +118,10 @@ router.post(
   company.setUserTeam
 );
 
+//Delete user from a team
+//done
+router.delete('/companies/teams/:teamId/users/:userId', auth, company.removeUserTeam);
+
 //Get a users team
 //done
 router.get("/companies/teams/users/:id", auth, company.getUserTeam);
@@ -169,5 +173,9 @@ router.get("/companies/:id/teams", auth, company.getAllTeams);
 
 //Delete user from company
 router.patch("/companies/:companyId/remove/users/:userId", auth, company.removeUserFromCompany);
+
+//Delete team from a comapny
+//done
+router.delete('/companies/:companyId/teams/:teamId', auth, company.removeUserTeam);
 
 module.exports = router;
