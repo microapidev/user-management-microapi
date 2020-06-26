@@ -1388,6 +1388,66 @@ const openApiDocumentation = {
         },
       },
     },
+    "/v1/users/{userId}/{teamId}/{invitedUserId}": {
+      post: {
+        tags: ["Company CRUD Operations"],
+        description: "Invite a user to a team",
+        operationId: "inviteUserToTeam",
+        security: [
+          {
+            bearerAuth: {},
+          },
+        ],
+        parameters: [
+          {
+            name: "userId",
+            in: "path",
+            schema: {
+              type: "string",
+            },
+            required: true,
+          },
+          {
+            name: "teamId",
+            in: "path",
+            schema: {
+              type: "string",
+            },
+            required: true,
+          },
+          {
+            name: "invitedUserId",
+            in: "path",
+            schema: {
+              type: "string",
+            },
+            required: true,
+          },
+        ],
+        responses: {
+          "200": {
+            description: "Success",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Response",
+                },
+              },
+            },
+          },
+          "400": {
+            description: "Bad Request",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Response",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
     "/v1/companies/teams/{id}/users": {
       get: {
         tags: ["Company CRUD Operations"],

@@ -25,10 +25,10 @@ router.get("/users", auth, newUser.getAllUsers);
 router.get("/users/:id", auth, newUser.getUser);
 
 //Activate User
-router.put('/users/activate/:userId',auth, newUser.activateUsers);
+router.put('/users/activate/:userId', auth, newUser.activateUsers);
 
 //Deactivate User
-router.put('/users/activate/:userId',auth, newUser.deActivateUsers);
+router.put('/users/activate/:userId', auth, newUser.deActivateUsers);
 
 //Get first name
 router.get("/users/:id/firstName", auth, newUser.getUserFirstName);
@@ -142,6 +142,9 @@ router.post(
   auth,
   company.setUserCompany
 );
+
+//Invite a user to a team
+router.post("/users/:userId/:teamId/:invitedUserId", newUser.inviteUserToTeam);
 
 //Create new company
 //done
