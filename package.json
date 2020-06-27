@@ -1,5 +1,5 @@
 {
-  "name": "User Management Api",
+  "name": "user-management-api",
   "version": "1.0.0",
   "description": "Dockerized user management app",
   "main": "app.js",
