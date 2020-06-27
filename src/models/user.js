@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
+const moment = require("moment-timezone");
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
@@ -48,6 +49,9 @@ const UserSchema = new Schema({
             }
 		}
     },
+    timezone: {
+        type: String
+    },
     address: {
         type: String,
         trim: true,
@@ -89,6 +93,9 @@ const UserSchema = new Schema({
 //updated_at should be the current time only when updated
 UserSchema.pre('save', function(next) {
     this.updated_at = Date.now();
+
+    // Timezone
+    this.timezone = moment.tz.guess();
     next();
 });
 
