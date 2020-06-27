@@ -25,15 +25,28 @@ const company = {
         }
     },
     createCompany: async (req, res) => {
-        const { name } = req.body;
-        try{
-            const company = new companyModel({name});
+        const { name, info } = req.body;
+        const company = await companyModel.findOne({name : name});
+        if(!company)
+        {
+            const company = new companyModel({
+                name,
+                info
+            });
             await company.save()
-            res.json({status: 'Success', message: 'New company created!', data: company})
+            res.json({
+                status: 'Success',
+                message: 'New company created!',
+                data: company
+            })
+        }else{
+            res.status(400).json({
+                status: "Fail",
+                message: "Company already exists"
+            });
         }
-        catch(err){
-            errHandler(err, res)
-        }
+            
+        
     },
     getCompany: async (req, res) => {
         const companyId = req.params.id

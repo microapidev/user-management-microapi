@@ -7,6 +7,9 @@ const CompanySchema = mongoose.Schema({
         unique: true,
         required: true
     },
+    info: {
+        type: String
+    },
     users : [{
         type: mongoose.Schema.Types.ObjectId, ref: 'user',
         unique: true,
