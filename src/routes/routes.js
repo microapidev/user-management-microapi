@@ -159,7 +159,10 @@ router.post(
 );
 
 //Invite a user to a team
-router.post("/users/:userId/:teamId/:invitedUserId", newUser.inviteUserToTeam);
+router.post("/companies/team/invite/:userId/:teamId/:invitedUserId", newUser.inviteUserToTeam);
+
+//Invite a user to a Company
+router.post("/companies/invite//:userId/:companyId/:invitedUserId", newUser.inviteUserToCompany);
 
 //Create new company
 //done

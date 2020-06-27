@@ -15,10 +15,26 @@ const TeamInviteSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId, ref: 'user',
     unique: true,
     required: true
+  }
+},
+  {
+    timestamps: true
+  });
+const CompanyInviteSchema = mongoose.Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId, ref: 'user',
+    unique: true,
+    required: true
   },
-  accepted: {
-    type: Boolean,
-    default: false
+  teamId: {
+    type: mongoose.Schema.Types.ObjectId, ref: 'company',
+    unique: true,
+    required: true
+  },
+  invitedUserId: {
+    type: mongoose.Schema.Types.ObjectId, ref: 'user',
+    unique: true,
+    required: true
   }
 },
   {
@@ -27,5 +43,6 @@ const TeamInviteSchema = mongoose.Schema({
 
 
 const TeamInviteModel = mongoose.model('TeamInvite', TeamInviteSchema);
+const CompanyInviteModel = mongoose.model('CompanyInvite', CompanyInviteSchema);
 
-module.exports = { TeamInviteModel };
+module.exports = { TeamInviteModel, CompanyInviteModel };
