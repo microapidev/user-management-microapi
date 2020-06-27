@@ -2,9 +2,11 @@ const env = require("dotenv");
 const sharp = require("sharp");
 const crypto = require("crypto");
 
-const userModel = require("../models/user");
+const companyModel = require('../models/company');
+const teamModel = require('../models/team');
+const userModel = require('../models/user');
 const serviceUser = require("../models/service_user");
-const { TeamInviteModel } = require("../models/invite");
+const { TeamInviteModel, CompanyInviteModel } = require("../models/invite");
 const jwtUtil = require("../security/jwtAuth");
 const { errHandler } = require("../handlers/errorHandlers");
 
@@ -691,7 +693,7 @@ const user = {
         status: "Success",
         message: "Phone number changed successfully",
         data: phoneNumber,
-      }), userModel.findOneAndUpdate({_id: change._id}, {$unset: {otp: 1 }});
+      }), userModel.findOneAndUpdate({ _id: change._id }, { $unset: { otp: 1 } });
 
       //can refactor to insert sms sending api for confirmation
     } catch (err) {
@@ -749,8 +751,8 @@ const user = {
         status: "Success",
         message: "Email address changed successfully",
         data: email,
-      }),userModel.findOneAndUpdate({_id: change._id}, {$unset: {otp: 1 }})
-     //can refactor to insert email sending api for confirmation
+      }), userModel.findOneAndUpdate({ _id: change._id }, { $unset: { otp: 1 } })
+      //can refactor to insert email sending api for confirmation
     } catch (err) {
       errHandler(err, res);
     }
@@ -760,6 +762,20 @@ const user = {
     try {
       const { userId, teamId, invitedUserId } = req.params;
       if (userId === invitedUserId) throw new Error("Cannot invite self");
+
+      const team = await teamModel.findOne({ _id: teamId })
+      const user = await userModel.findById(userId)
+      const invitedUser = await userModel.findById(invitedUserId)
+
+      if (!user) throw new Error('User not found');
+      if (!team) throw new Error('Team not found');
+      if (!invitedUser) throw new Error('Invited User not found');
+
+      team.users = team.users.concat(invitedUser)
+      invitedUser.team = team
+
+      await team.save()
+      await invitedUser.save();
 
       const newInvite = await new TeamInviteModel({
         userId,
@@ -772,7 +788,48 @@ const user = {
         .then((invite) => {
           res.status(200).json({
             status: "Success",
-            message: `Invite request sent to User`,
+            message: `User invited Successfully`,
+            data: invite,
+          });
+        })
+        .catch((e) => {
+          throw new Error(e.message);
+        });
+    } catch (err) {
+      errHandler(err, res);
+    }
+  },
+  inviteUserToCompany: async (req, res) => {
+    try {
+      const { userId, companyId, invitedUserId } = req.params;
+      if (userId === invitedUserId) throw new Error("Cannot invite self");
+
+      const company = await companyModel.findOne({ _id: companyId })
+      const user = await userModel.findById(userId)
+      const invitedUser = await userModel.findById(invitedUserId)
+
+      if (!user) throw new Error('User not found');
+      if (!company) throw new Error('Team not found');
+      if (!invitedUser) throw new Error('Invited User not found');
+
+      company.users = company.users.concat(invitedUser)
+      invitedUser.company = company
+
+      await company.save()
+      await invitedUser.save();
+
+      const newInvite = await new CompanyInviteModel({
+        userId,
+        companyId,
+        invitedUserId,
+      });
+
+      newInvite
+        .save()
+        .then((invite) => {
+          res.status(200).json({
+            status: "Success",
+            message: `User invited successfully`,
             data: invite,
           });
         })
