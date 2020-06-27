@@ -9,6 +9,7 @@ const serviceUser = require("../models/service_user");
 const { TeamInviteModel, CompanyInviteModel } = require("../models/invite");
 const jwtUtil = require("../security/jwtAuth");
 const { errHandler } = require("../handlers/errorHandlers");
+const User = require("../models/user");
 
 env.config();
 
@@ -129,22 +130,34 @@ const user = {
     } = req.body;
     const gender = req.body.gender.toLowerCase();
     try {
-      const newUser = new userModel({
-        firstName,
-        lastName,
-        email,
-        phone,
-        age,
-        status,
-        address,
-        gender,
-      });
-      await newUser.save();
-      res.json({
-        status: "Success",
-        message: "New user created!",
-        data: newUser,
-      });
+      const user = await User.findOne({email:req.body.email});
+      if(!user){
+        const newUser = new userModel({
+          firstName,
+          lastName,
+          email,
+          phone,
+          age,
+          status,
+          address,
+          gender,
+        });
+        await newUser.save();
+        res.json({
+          status: "Success",
+          message: "New user created!",
+          data: newUser,
+        });
+      }
+      else {
+        res
+        .status(400)
+        .json({
+          status: "Fail",
+          message: "User already Exists"
+        })
+      }
+      
     } catch (err) {
       errHandler(err, res);
     }
