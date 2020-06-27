@@ -1716,6 +1716,44 @@ const openApiDocumentation = {
           },
         },
       },
+      put: {
+        tags: ["Company CRUD Operations"],
+          description: "Update Company Info",
+          operationId: "setCompanyInfoCompanyById",
+          security: [{
+            bearerAuth: {},
+          }, ],
+          parameters: [{
+            name: "id",
+            in: "path",
+            schema: {
+              type: "string",
+            },
+            required: true,
+          }, ],
+          responses: {
+            "200": {
+              description: "Success",
+              content: {
+                "application/json": {
+                  schema: {
+                    $ref: "#/components/schemas/Response",
+                  },
+                },
+              },
+            },
+            "400": {
+              description: "Bad Request",
+              content: {
+                "application/json": {
+                  schema: {
+                    $ref: "#/components/schemas/Response",
+                  },
+                },
+              },
+            },
+          },
+      }
     },
     "/v1/companies/{id}/users": {
       get: {
