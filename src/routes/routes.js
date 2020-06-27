@@ -198,10 +198,11 @@ router.get("/companies/:id/teams", auth, company.getAllTeams);
 //done
 router.delete("/companies/:id/teams/:id", auth, company.deleteTeam);
 //update team info done
-router.put("/compamies/:id/teams/:id", auth, company.updateTeamInfo);
+router.put("/companies/:id/teams/:id", auth, company.updateTeamInfo);
 
 //set team description done
 router.post("/companies/:id/teams/:id", auth, company.teamDescription);
+
 //Delete user from company
 router.patch(
   "/companies/:companyId/remove/users/:userId",
