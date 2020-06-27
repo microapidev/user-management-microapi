@@ -81,7 +81,10 @@ const UserSchema = new Schema({
         ref: 'company'
     }
     
-});
+},{
+    timestamps: true
+  }
+);
 
 //updated_at should be the current time only when updated
 UserSchema.pre('save', function(next) {
