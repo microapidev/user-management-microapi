@@ -3,7 +3,7 @@ const openApiDocumentation = {
   openapi: "3.0.1",
   info: {
     title: "Team Granite's Dockerized User Management Micro-Service",
-    description: "A Dockerized Microservice for User Management",
+    description: "A Dockerized Microservice for User Managements",
     contact: {
       name: "Team Granite",
     },
