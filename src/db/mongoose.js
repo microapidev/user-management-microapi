@@ -3,9 +3,15 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 
 dotenv.config();
+
+const {
+    ENVIRONMENT,
+    ATLAS_URI,
+    LOCAL_MONGO_DB_URL
+} = process.env;
 const connectToDatabase = () => {
-	
-    mongoose.connect(process.env.LOCAL_MONGO_DB_URL, {
+	const dbUrl = ENVIRONMENT === 'production' ? ATLAS_URI : LOCAL_MONGO_DB_URL;
+    mongoose.connect(dbUrl, {
         useUnifiedTopology: true,
         useNewUrlParser: true,
         useCreateIndex: true,
