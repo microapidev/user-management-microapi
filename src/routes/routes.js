@@ -28,7 +28,7 @@ router.get("/users/:id", auth, newUser.getUser);
 router.put('/users/activate/:userId',auth, newUser.activateUsers);
 
 //Deactivate User
-router.put('/users/activate/:userId',auth, newUser.deActivateUsers);
+router.put('/users/deactivate/:userId',auth, newUser.deActivateUsers);
 
 //Get first name
 router.get("/users/:id/firstName", auth, newUser.getUserFirstName);
