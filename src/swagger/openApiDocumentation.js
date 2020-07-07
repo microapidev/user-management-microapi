@@ -388,12 +388,12 @@ const openApiDocumentation = {
       put: {
         tags: ["CRUD Operations"],
         description: "Set User First Name",
+        operationId: "setUserFirstName",
         security: [
           {
             bearerAuth: {},
           },
         ],
-        operationId: "setUserFirstName",
         parameters: [
           {
             name: "id",
@@ -404,6 +404,21 @@ const openApiDocumentation = {
             required: true,
           },
         ],
+        requestBody: {
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                  properties: {
+                    firstName: {
+                type: "string"
+            }
+          },
+              },
+            },
+          },
+          required: true,
+        },
         responses: {
           "200": {
             description: "Success",
@@ -490,92 +505,21 @@ const openApiDocumentation = {
             required: true,
           },
         ],
-        responses: {
-          "200": {
-            description: "Success",
-            content: {
-              "application/json": {
-                schema: {
-                  $ref: "#/components/schemas/Response",
-                },
+        requestBody: {
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                  properties: {
+                    lastName: {
+                type: "string"
+            }
+          },
               },
             },
           },
-          "400": {
-            description: "Bad Request",
-            content: {
-              "application/json": {
-                schema: {
-                  $ref: "#/components/schemas/Response",
-                },
-              },
-            },
-          },
+          required: true,
         },
-      },
-    },
-    "/v1/users/{id}/level": {
-      get: {
-        tags: ["CRUD Operations"],
-        description: "Get Users level",
-        security: [
-          {
-            bearerAuth: {},
-          },
-        ],
-        operationId: "getUserLevel",
-        parameters: [
-          {
-            name: "id",
-            in: "path",
-            schema: {
-              type: "string",
-            },
-            required: true,
-          },
-        ],
-        responses: {
-          "200": {
-            description: "Success",
-            content: {
-              "application/json": {
-                schema: {
-                  $ref: "#/components/schemas/Response",
-                },
-              },
-            },
-          },
-          "400": {
-            description: "Bad Request",
-            content: {
-              "application/json": {
-                schema: {
-                  $ref: "#/components/schemas/Response",
-                },
-              },
-            },
-          },
-        },
-      },
-      put: {
-        tags: ["CRUD Operations"],
-        description: "Set User Level",
-        security: [
-          {
-            bearerAuth: {},
-          },
-        ],
-        operationId: "setUserLevel",
-        parameters: [
-          {
-            name: "id",
-            in: "path",
-            schema: {
-              type: "string",
-            },
-            required: true,
-          },
-        ],
         responses: {
           "200": {
             description: "Success",
@@ -662,6 +606,21 @@ const openApiDocumentation = {
             required: true,
           },
         ],
+        requestBody: {
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                  properties: {
+                    email: {
+                      type: "string"
+            }
+          },
+              },
+            },
+          },
+          required: true,
+        },
         responses: {
           "200": {
             description: "Success",
@@ -748,6 +707,21 @@ const openApiDocumentation = {
             required: true,
           },
         ],
+        requestBody: {
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                  properties: {
+                    phone: {
+                type: "string"
+            }
+          },
+              },
+            },
+          },
+          required: true,
+        },
         responses: {
           "200": {
             description: "Success",
@@ -834,92 +808,21 @@ const openApiDocumentation = {
             required: true,
           },
         ],
-        responses: {
-          "200": {
-            description: "Success",
-            content: {
-              "application/json": {
-                schema: {
-                  $ref: "#/components/schemas/Response",
-                },
+        requestBody: {
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                  properties: {
+                    age: {
+                type: "string"
+            }
+          },
               },
             },
           },
-          "400": {
-            description: "Bad Request",
-            content: {
-              "application/json": {
-                schema: {
-                  $ref: "#/components/schemas/Response",
-                },
-              },
-            },
-          },
+          required: true,
         },
-      },
-    },
-    "/v1/users/{id}/status": {
-      get: {
-        tags: ["CRUD Operations"],
-        description: "Get User Status",
-        security: [
-          {
-            bearerAuth: {},
-          },
-        ],
-        operationId: "getUserStatus",
-        parameters: [
-          {
-            name: "id",
-            in: "path",
-            schema: {
-              type: "string",
-            },
-            required: true,
-          },
-        ],
-        responses: {
-          "200": {
-            description: "Success",
-            content: {
-              "application/json": {
-                schema: {
-                  $ref: "#/components/schemas/Response",
-                },
-              },
-            },
-          },
-          "400": {
-            description: "Bad Request",
-            content: {
-              "application/json": {
-                schema: {
-                  $ref: "#/components/schemas/Response",
-                },
-              },
-            },
-          },
-        },
-      },
-      put: {
-        tags: ["CRUD Operations"],
-        description: "Set User Status",
-        security: [
-          {
-            bearerAuth: {},
-          },
-        ],
-        operationId: "setUserStatus",
-        parameters: [
-          {
-            name: "id",
-            in: "path",
-            schema: {
-              type: "string",
-            },
-            required: true,
-          },
-        ],
         responses: {
           "200": {
             description: "Success",
@@ -1006,6 +909,21 @@ const openApiDocumentation = {
             required: true,
           },
         ],
+        requestBody: {
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                  properties: {
+                    gender: {
+                      type: "string"
+            }
+          },
+              },
+            },
+          },
+          required: true,
+        },
         responses: {
           "200": {
             description: "Success",
@@ -1219,6 +1137,21 @@ const openApiDocumentation = {
             required: true,
           },
         ],
+        requestBody: {
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                  properties: {
+                    address: {
+                      type: "string"
+            }
+          },
+              },
+            },
+          },
+          required: true,
+        },
         responses: {
           "200": {
             description: "Success",
@@ -1439,6 +1372,21 @@ const openApiDocumentation = {
             required: true,
           },
         ],
+        requestBody: {
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                  properties: {
+                    phone: {
+                      type: "string"
+            }
+          },
+              },
+            },
+          },
+          required: true,
+        },
         responses: {
           "200": {
             description: "Success",
@@ -1527,6 +1475,21 @@ const openApiDocumentation = {
             required: true,
           },
         ],
+        requestBody: {
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                  properties: {
+                    email: {
+                      type: "string"
+            }
+          },
+              },
+            },
+          },
+          required: true,
+        },
         responses: {
           "200": {
             description: "Success",
