@@ -7,10 +7,10 @@ const team = require('../models/team');
 
 const company = {
     createTeam: async (req, res) => {
-        const { name } = req.body;
+        const { name, description } = req.body;
         const companyId = req.params.id
         try{
-            const newTeam = new teamModel({name});
+            const newTeam = new teamModel({name, description});
             await newTeam.save()
 
             const company = await companyModel.findOne({_id: companyId})
