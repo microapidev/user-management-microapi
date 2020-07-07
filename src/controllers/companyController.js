@@ -7,10 +7,10 @@ const team = require('../models/team');
 
 const company = {
     createTeam: async (req, res) => {
-        const { name } = req.body;
+        const { name, description } = req.body;
         const companyId = req.params.id
         try{
-            const newTeam = new teamModel({name});
+            const newTeam = new teamModel({name, description});
             await newTeam.save()
 
             const company = await companyModel.findOne({_id: companyId})
@@ -47,6 +47,20 @@ const company = {
         }
         
     },
+
+    setCompanyInfo: async (req, res) =>{
+
+        try{
+            const company = await companyModel.findOneAndUpdate({_id:req.params.id }, {companyinfo: req.body.companyinfo})
+            if(!company) return res.status(404).json({status: 'Failed', message:'Company not found',  data: null })
+            res.status(200).json({status: 'Success', message: 'company info updated', data: company})
+        }
+        catch(err){
+            errHandler(err, res)
+        }
+
+    },
+    
     getAllCompanies: (req, res) => {
         companyModel.find()
           .then((companies) => res.json({status: 'Success', message: 'List of Companies', data: companies}))
