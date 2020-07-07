@@ -2462,6 +2462,10 @@ const openApiDocumentation = {
             type: "string",
             description: "Team Name",
           },
+          description:{
+            type: "string",
+            description: "Team Description"
+          },
         },
       },
       Users: {
