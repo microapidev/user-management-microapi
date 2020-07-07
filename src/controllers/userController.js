@@ -9,7 +9,7 @@ const serviceUser = require("../models/service_user");
 const { TeamInviteModel, CompanyInviteModel } = require("../models/invite");
 const jwtUtil = require("../security/jwtAuth");
 const { errHandler } = require("../handlers/errorHandlers");
-const User = require("../models/user");
+
 
 env.config();
 
@@ -42,31 +42,6 @@ const user = {
     }
   },
 
-  getMe: (req, res) => {
-    return res
-      .status(200)
-      .json({ status: "Success", message: "your profile", data: req.user });
-  },
-
-  deleteMe: async (req, res) => {
-    try {
-      const user = await req.user.remove();
-      if (!user)
-        return res.status(404).json({
-          status: "Failed",
-          message: "Delete failed: user not found",
-          data: null,
-        });
-      res.status(200).json({
-        status: "Success",
-        message: "Account deleted successfully!",
-        data: null,
-      });
-    } catch (err) {
-      errHandler(err, res);
-    }
-  },
-
   generateToken: async (req, res) => {
     const email = req.query.email;
     await serviceUser.findOne({ email }).then((user) => {
@@ -93,6 +68,32 @@ const user = {
     });
   },
 
+  getMe: (req, res) => {
+    return res
+      .status(200)
+      .json({ status: "Success", message: "your profile", data: req.user });
+  },
+
+  deleteMe: async (req, res) => {
+    try {
+      const user = await req.user.remove();
+      if (!user)
+        return res.status(404).json({
+          status: "Failed",
+          message: "Delete failed: user not found",
+          data: null,
+        });
+      res.status(200).json({
+        status: "Success",
+        message: "Account deleted successfully!",
+        data: null,
+      });
+    } catch (err) {
+      errHandler(err, res);
+    }
+  },
+
+  
   getAllUsers: (req, res) => {
     userModel
       .find()
@@ -130,7 +131,7 @@ const user = {
     } = req.body;
     const gender = req.body.gender.toLowerCase();
     try {
-      const user = await User.findOne({email:req.body.email});
+      const user = await userModel.findOne({email:req.body.email});
       if(!user){
         const newUser = new userModel({
           firstName,
@@ -360,30 +361,6 @@ const user = {
       errHandler(err, res);
     }
   },
-  setUserStatus: async (req, res) => {
-    try {
-      const user = await userModel
-        .findOneAndUpdate(
-          { _id: req.params.id },
-          { status: req.body.status },
-          { new: true, runValidators: true }
-        )
-        .select(["-avatar"]);
-      if (!user)
-        return res.status(404).json({
-          status: "Failed",
-          message: "Status not set: user not found",
-          data: null,
-        });
-      res.json({
-        status: "Success",
-        message: "User Status updated!",
-        data: user,
-      });
-    } catch (err) {
-      errHandler(err, res);
-    }
-  },
   getUserStatus: async (req, res) => {
     try {
       const user = await userModel.findOne({ _id: req.params.id });
@@ -426,17 +403,19 @@ const user = {
   },
   activateUsers: async (req, res) => {
     try {
-      const users = await userModel.findOne({ _id: req.params.id });
-      if (!users) {
+      const user = await userModel.findOne({ _id: req.params.id });
+      if (!user) {
         return res.status(404).send({
-          message: "User not found with id " + req.params.companyId,
+          message: "User not found with id " + req.params.id,
         });
       } else {
         user.status = "ACTIVE";
+        user.save()
         res.json({
           status: "Success",
           message: "User Activated",
           data: user.status,
+          user
         });
       }
     } catch (err) {
@@ -446,17 +425,20 @@ const user = {
 
   deActivateUsers: async (req, res) => {
     try {
-      const users = await userModel.findOne({ _id: req.params.id });
-      if (!users) {
+      const user = await userModel.findOne({ _id: req.params.id });
+      if (!user) {
         return res.status(404).send({
-          message: "User not found with id " + req.params.companyId,
+          message: "User not found with id " + req.params.id,
         });
       } else {
         user.status = "INACTIVE";
+        user.save()
         res.json({
           status: "Success",
           message: "User Deactivated",
           data: user.status,
+          user
+          
         });
       }
     } catch (err) {
@@ -616,42 +598,42 @@ const user = {
       errHandler(err, res);
     }
   },
-  setUserLevel: async (req, res) => {
-    try {
-      const user = await userModel
-        .findOneAndUpdate(
-          { _id: req.params.id },
-          { level: req.body.level },
-          { new: true, runValidators: true }
-        )
-        .select(["-avatar"]);
-      if (!user)
-        return res.status(404).json({
-          status: "Failed",
-          message: "level not set: user not found",
-          data: null,
-        });
-      res.json({
-        status: "Success",
-        message: "User level updated!",
-        data: user,
-      });
-    } catch (err) {
-      errHandler(err, res);
-    }
-  },
-  getUserLevel: async (req, res) => {
-    try {
-      const user = await userModel.findOne({ _id: req.params.id });
-      if (!user)
-        return res
-          .status(404)
-          .json({ status: "Failed", message: "user not found", data: null });
-      res.json({ status: "Success", message: "User level", data: user.level });
-    } catch (err) {
-      errHandler(err, res);
-    }
-  },
+  // setUserLevel: async (req, res) => {
+  //   try {
+  //     const user = await userModel
+  //       .findOneAndUpdate(
+  //         { _id: req.params.id },
+  //         { level: req.body.level },
+  //         { new: true, runValidators: true }
+  //       )
+  //       .select(["-avatar"]);
+  //     if (!user)
+  //       return res.status(404).json({
+  //         status: "Failed",
+  //         message: "level not set: user not found",
+  //         data: null,
+  //       });
+  //     res.json({
+  //       status: "Success",
+  //       message: "User level updated!",
+  //       data: user,
+  //     });
+  //   } catch (err) {
+  //     errHandler(err, res);
+  //   }
+  // },
+  // getUserLevel: async (req, res) => {
+  //   try {
+  //     const user = await userModel.findOne({ _id: req.params.id });
+  //     if (!user)
+  //       return res
+  //         .status(404)
+  //         .json({ status: "Failed", message: "user not found", data: null });
+  //     res.json({ status: "Success", message: "User level", data: user.level });
+  //   } catch (err) {
+  //     errHandler(err, res);
+  //   }
+  // },
 
   sendOtpSms: async (req, res) => {
     let nums = crypto.randomBytes(4).toString("hex");
