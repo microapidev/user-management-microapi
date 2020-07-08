@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const newUser = require("../controllers/userController");
 const company = require("../controllers/companyController");
-const upload = require("../controllers/upload");
+// const upload = require("../controllers/upload");
 const auth = require("../middleware/auth");
 
 //generate token.....done
@@ -65,18 +65,6 @@ router.get("/users/:id/gender", auth, newUser.getUserGender);
 //set user gender...done
 router.put("/users/:id/gender", auth, newUser.setUserGender);
 
-//send otp to registered phonenumber....
-router.put("/users/sms/:id", auth, newUser.sendOtpSms);
-
-//use otp to change phone number
-router.patch("/users/changephone/:id", auth, newUser.changePhoneWithSms);
-
-//send otp to registered email address
-router.put("/users/email/:id", auth, newUser.sendOtpEmail);
-
-//use otp to change email address
-router.patch("/users/changeemail/:id", auth, newUser.changeEmail);
-
 //set user address.....done
 router.put("/users/:id/address", auth, newUser.setUserAddress);
 
@@ -90,13 +78,13 @@ router.get("/users/status/active", auth, newUser.getActiveUsers);
 router.get("/users/status/inactive", auth, newUser.getInActiveUsers);
 
 //Get Avatar
-router.get("/users/:id/avatar", auth, newUser.getUserAvatar);
+// router.get("/users/:id/avatar", auth, newUser.getUserAvatar);
 
 //Set Avatar
-router.put("/users/:id/avatar",auth, upload.single("avatar"),newUser.setUserAvatar);
+// router.put("/users/:id/avatar",auth, upload.single("avatar"),newUser.setUserAvatar);
 
 //Delete Avatar
-router.delete("/users/:id/avatar", auth, newUser.removeUserAvatar);
+// router.delete("/users/:id/avatar", auth, newUser.removeUserAvatar);
 
 //Get self
 router.get("/me", auth, newUser.getMe);
@@ -104,10 +92,13 @@ router.get("/me", auth, newUser.getMe);
 //Delete self
 router.delete("/me", auth, newUser.deleteMe);
 
-
 //Add user to a team
 //done
-router.post("/companies/teams/:teamId/users/:userId",auth,company.setUserTeam);
+router.post(
+  "/companies/teams/:teamId/users/:userId",
+  auth,
+  company.setUserTeam
+);
 
 //Delete user from a team
 //done
@@ -138,17 +129,23 @@ router.post(
 );
 
 //Invite a user to a team
-router.post("/companies/team/invite/:userId/:teamId/:invitedUserId", newUser.inviteUserToTeam);
+router.post(
+  "/companies/team/invite/:userId/:teamId/:invitedUserId",
+  newUser.inviteUserToTeam
+);
 
 //Invite a user to a Company
-router.post("/companies/invite//:userId/:companyId/:invitedUserId", newUser.inviteUserToCompany);
+router.post(
+  "/companies/invite//:userId/:companyId/:invitedUserId",
+  newUser.inviteUserToCompany
+);
 
 //Create new company
 //done
 router.post("/companies", auth, company.createCompany);
 
 // / update company info
-router.put('/companies/:id', auth, company.setCompanyInfo);
+router.put("/companies/:id", auth, company.setCompanyInfo);
 
 //create a new team
 //done
@@ -176,12 +173,24 @@ router.get("/companies/:id/teams", auth, company.getAllTeams);
 
 //delete team
 //done
-router.delete("/companies/:id/teams/:id", auth, company.deleteTeam);
+router.delete(
+  "/companies/:company_id/teams/:team_id",
+  auth,
+  company.deleteTeam
+);
 //update team info done
-router.put("/companies/:id/teams/:id", auth, company.updateTeamInfo);
+router.put(
+  "/companies/:company_id/teams/:team_id",
+  auth,
+  company.updateTeamInfo
+);
 
 //set team description done
-router.post("/companies/:id/teams/:id", auth, company.teamDescription);
+router.post(
+  "/companies/:company_id/teams/:team_id",
+  auth,
+  company.teamDescription
+);
 
 //Delete user from company
 router.patch(

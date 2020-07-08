@@ -10,10 +10,24 @@ const company = {
     const { name, description } = req.body;
     const companyId = req.params.id;
     try {
-      const newTeam = new teamModel({ name, description });
-      await newTeam.save();
+      const company = await companyModel.findOne({
+        _id: companyId,
+        creatorId: req.user._id,
+      });
 
-      const company = await companyModel.findOne({ _id: companyId });
+      if (!company) {
+        return res.status(404).json({
+          status: "Failed",
+          message: "Company not found",
+        });
+      }
+
+      const newTeam = new teamModel({
+        name,
+        description,
+        creatorId: req.user._id,
+      });
+      await newTeam.save();
 
       company.teams = company.teams.concat(newTeam);
       await company.save();
@@ -30,7 +44,7 @@ const company = {
   createCompany: async (req, res) => {
     const { name } = req.body;
     try {
-      const company = new companyModel({ name });
+      const company = new companyModel({ name, creatorId: req.user._id });
       await company.save();
       res.json({
         status: "Success",
@@ -44,7 +58,10 @@ const company = {
   getCompany: async (req, res) => {
     const companyId = req.params.id;
     try {
-      const company = await companyModel.findOne({ _id: companyId });
+      const company = await companyModel.findOne({
+        _id: companyId,
+        creatorId: req.user._id,
+      });
       if (!company)
         return res
           .status(404)
@@ -58,7 +75,7 @@ const company = {
   setCompanyInfo: async (req, res) => {
     try {
       const company = await companyModel.findOneAndUpdate(
-        { _id: req.params.id },
+        { _id: req.params.id, creatorId: req.user._id },
         { companyinfo: req.body.companyinfo }
       );
       if (!company)
@@ -77,7 +94,7 @@ const company = {
 
   getAllCompanies: (req, res) => {
     companyModel
-      .find()
+      .find({ creatorId: req.user._id })
       .then((companies) =>
         res.json({
           status: "Success",
@@ -95,7 +112,10 @@ const company = {
     const companyId = req.params.id;
 
     try {
-      const company = await companyModel.findById(companyId);
+      const company = await companyModel.findOne({
+        _id: companyId,
+        creatorId: req.user._id,
+      });
       if (!company)
         return res
           .status(404)
@@ -187,7 +207,10 @@ const company = {
     }
   },
   getUserTeam: async (req, res) => {
-    const user = await userModel.findOne({ _id: req.params.id });
+    const user = await userModel.findOne({
+      _id: req.params.id,
+      creatorId: req.user._id,
+    });
     if (!user)
       return res
         .status(404)
@@ -200,7 +223,10 @@ const company = {
     res.json({ status: "Success", message: "User team name", data: team });
   },
   getUserCompany: async (req, res) => {
-    const user = await userModel.findOne({ _id: req.params.id });
+    const user = await userModel.findOne({
+      _id: req.params.id,
+      creatorId: req.user._id,
+    });
     if (!user)
       return res
         .status(404)
@@ -217,7 +243,10 @@ const company = {
   getTeamMembers: async (req, res) => {
     const teamId = req.params.id;
     try {
-      const team = await teamModel.findById(teamId);
+      const team = await teamModel.findOne({
+        _id: teamId,
+        creatorId: req.user._id,
+      });
       if (!team)
         return res
           .status(404)
@@ -241,7 +270,10 @@ const company = {
   getCompanyMembers: async (req, res) => {
     const companyId = req.params.id;
     try {
-      const company = await companyModel.findById(companyId);
+      const company = await companyModel.findOne({
+        _id: companyId,
+        creatorId: req.user._id,
+      });
       if (!company)
         return res
           .status(404)
@@ -265,7 +297,7 @@ const company = {
 
   deleteCompany: async (req, res) => {
     companyModel
-      .findByIdAndRemove(req.params.companyId)
+      .findOneAndRemove({ _id: req.params.companyId, creatorId: req.user._id })
       .then((transaction) => {
         if (!transaction) {
           return res.status(404).send({
@@ -287,8 +319,14 @@ const company = {
     const companyId = req.params.companyId;
 
     try {
-      const company = await companyModel.findOne({ _id: companyId });
-      const user = await userModel.findById(userId);
+      const company = await companyModel.findOne({
+        _id: companyId,
+        creatorId: req.user._id,
+      });
+      const user = await userModel.findOne({
+        _id: userId,
+        creatorId: req.user._id,
+      });
 
       if (!user)
         return res
@@ -319,8 +357,14 @@ const company = {
     const teamId = req.params.teamId;
 
     try {
-      const team = await teamModel.findOne({ _id: teamId });
-      const user = await userModel.findById(userId);
+      const team = await teamModel.findOne({
+        _id: teamId,
+        creatorId: req.user._id,
+      });
+      const user = await userModel.findOne({
+        _id: userId,
+        creatorId: req.user._id,
+      });
 
       if (!user)
         return res
@@ -373,8 +417,14 @@ const company = {
     const teamId = req.params.teamId;
 
     try {
-      const team = await teamModel.findOne({ _id: teamId });
-      const user = await userModel.findById(userId);
+      const team = await teamModel.findOne({
+        _id: teamId,
+        creatorId: req.user._id,
+      });
+      const user = await userModel.findOne({
+        _id: userId,
+        creatorId: req.user._id,
+      });
 
       if (!user)
         return res
