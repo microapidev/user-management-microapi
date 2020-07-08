@@ -10,8 +10,7 @@ const {
     LOCAL_MONGO_DB_URL
 } = process.env;
 const connectToDatabase = () => {
-	// const dbUrl = ENVIRONMENT === 'production' ? ATLAS_URI : LOCAL_MONGO_DB_URL;
-  const dbUrl = LOCAL_MONGO_DB_URL;
+	const dbUrl = ENVIRONMENT === 'production' ? ATLAS_URI : LOCAL_MONGO_DB_URL;
     mongoose.connect(dbUrl, {
         useUnifiedTopology: true,
         useNewUrlParser: true,

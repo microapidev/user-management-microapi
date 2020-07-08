@@ -2,14 +2,13 @@ const env = require("dotenv");
 const sharp = require("sharp");
 const crypto = require("crypto");
 
-const companyModel = require('../models/company');
-const teamModel = require('../models/team');
-const userModel = require('../models/user');
+const companyModel = require("../models/company");
+const teamModel = require("../models/team");
+const userModel = require("../models/user");
 const serviceUser = require("../models/service_user");
 const { TeamInviteModel, CompanyInviteModel } = require("../models/invite");
 const jwtUtil = require("../security/jwtAuth");
 const { errHandler } = require("../handlers/errorHandlers");
-
 
 env.config();
 
@@ -93,10 +92,9 @@ const user = {
     }
   },
 
-
   getAllUsers: (req, res) => {
     userModel
-      .find({creatorId : req.user._id})
+      .find({ creatorId: req.user._id })
       .select(["-avatar"])
       .then((users) =>
         res.json({ status: "Success", message: "List of Users", data: users })
@@ -131,8 +129,8 @@ const user = {
     } = req.body;
     const gender = req.body.gender.toLowerCase();
     try {
-      const user = await userModel.findOne({email:req.body.email});
-      if(!user){
+      const user = await userModel.findOne({ email: req.body.email });
+      if (!user) {
         const newUser = new userModel({
           firstName,
           lastName,
@@ -150,14 +148,11 @@ const user = {
           message: "New user created!",
           data: newUser,
         });
-      }
-      else {
-        res
-        .status(400)
-        .json({
+      } else {
+        res.status(400).json({
           status: "Fail",
-          message: "User already Exists"
-        })
+          message: "User already Exists",
+        });
       }
 
     } catch (err) {

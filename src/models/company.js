@@ -1,33 +1,45 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const CompanySchema = mongoose.Schema({
-    name:{ 
-        type: String,
-        trim: true,
-        unique: true,
-        required: true
+const CompanySchema = mongoose.Schema(
+  {
+    creatorId: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "service_user",
     },
-    companyinfo:{ 
-        type: String,
-        trim: true,
-        required: true
+    name: {
+      type: String,
+      trim: true,
+      unique: true,
+      required: true,
     },
-    users : [{
-        type: mongoose.Schema.Types.ObjectId, ref: 'user',
+    companyinfo: {
+      type: String,
+      trim: true,
+      required: true,
+    },
+    users: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "user",
         unique: true,
-        required: true
-    }],
-    teams : [{
-        type: mongoose.Schema.Types.ObjectId, ref: 'team',
+        required: true,
+      },
+    ],
+    teams: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "team",
         unique: true,
-        required: true
-    }],
-},
-{
-    timestamps: true
-  });
+        required: true,
+      },
+    ],
+  },
+  {
+    timestamps: true,
+  }
+);
 
+const Company = mongoose.model("Company", CompanySchema);
 
-  const Company = mongoose.model('Company', CompanySchema);
-
-  module.exports= Company;
+module.exports = Company;
