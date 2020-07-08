@@ -108,7 +108,7 @@ const user = {
   getUser: async (req, res) => {
     try {
       const user = await userModel
-        .findOne({ _id: req.params.id, creatorId: req.user_id })
+        .findOne({ _id: req.params.id, creatorId: req.user._id })
         .select(["-avatar"]);
       if (!user)
         return res
@@ -129,7 +129,8 @@ const user = {
       status,
       address,
     } = req.body;
-    const gender = req.body.gender.toLowerCase();
+    const gender =
+      (req.body.gender && req.body.gender.toLowerCase()) || undefined;
     try {
       const user = await userModel.findOne({ email: req.body.email });
       if (!user) {

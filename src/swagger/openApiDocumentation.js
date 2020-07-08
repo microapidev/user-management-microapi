@@ -1561,60 +1561,6 @@ const openApiDocumentation = {
         },
       },
     },
-    "v1/companies/{id}/teams": {
-      post: {
-        tags: ["Company CRUD Operations"],
-        description: "Create New Team",
-        operationId: "createNewTeam",
-        security: [
-          {
-            bearerAuth: {},
-          },
-        ],
-        requestBody: {
-          content: {
-            "application/json": {
-              schema: {
-                $ref: "#/components/schemas/Team",
-              },
-            },
-          },
-          required: true,
-        },
-        parameters: [
-          {
-            name: "id",
-            in: "path",
-            schema: {
-              type: "string",
-            },
-            required: true,
-          },
-        ],
-        responses: {
-          "200": {
-            description: "Success",
-            content: {
-              "application/json": {
-                schema: {
-                  $ref: "#/components/schemas/Response",
-                },
-              },
-            },
-          },
-          "400": {
-            description: "Bad Request",
-            content: {
-              "application/json": {
-                schema: {
-                  $ref: "#/components/schemas/Response",
-                },
-              },
-            },
-          },
-        },
-      },
-    },
     "/v1/companies/teams/{teamId}/users/{userId}": {
       post: {
         tags: ["Company CRUD Operations"],
@@ -1841,6 +1787,58 @@ const openApiDocumentation = {
             bearerAuth: {},
           },
         ],
+        parameters: [
+          {
+            name: "id",
+            in: "path",
+            schema: {
+              type: "string",
+            },
+            required: true,
+          },
+        ],
+        responses: {
+          "200": {
+            description: "Success",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Response",
+                },
+              },
+            },
+          },
+          "400": {
+            description: "Bad Request",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Response",
+                },
+              },
+            },
+          },
+        },
+      },
+      post: {
+        tags: ["Company CRUD Operations"],
+        description: "Create New Team",
+        operationId: "createNewTeam",
+        security: [
+          {
+            bearerAuth: {},
+          },
+        ],
+        requestBody: {
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/Team",
+              },
+            },
+          },
+          required: true,
+        },
         parameters: [
           {
             name: "id",
