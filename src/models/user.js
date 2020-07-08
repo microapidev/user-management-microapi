@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 const moment = require("moment-timezone");
+const service_user = require('./service_user');
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
@@ -56,6 +57,11 @@ const UserSchema = new Schema({
         type: String,
         trim: true,
     },
+    creatorId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "serviceUser",
+        required: true
+    }, 
     gender: { 
         type: String,
         enum: ['male', 'female'],

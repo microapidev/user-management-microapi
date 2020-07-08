@@ -96,7 +96,7 @@ const user = {
   
   getAllUsers: (req, res) => {
     userModel
-      .find()
+      .find({creatorId : req.user._id})
       .select(["-avatar"])
       .then((users) =>
         res.json({ status: "Success", message: "List of Users", data: users })
@@ -128,6 +128,7 @@ const user = {
       age,
       status,
       address,
+      creatorId
     } = req.body;
     const gender = req.body.gender.toLowerCase();
     try {
@@ -142,6 +143,7 @@ const user = {
           status,
           address,
           gender,
+          creatorId
         });
         await newUser.save();
         res.json({
