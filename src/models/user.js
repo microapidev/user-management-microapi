@@ -59,7 +59,7 @@ const UserSchema = new Schema({
     },
     creatorId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "serviceUser",
+        ref: "service_user",
         required: true
     }, 
     gender: { 
