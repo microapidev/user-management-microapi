@@ -10,7 +10,7 @@ const CompanySchema = mongoose.Schema({
     companyinfo:{ 
         type: String,
         trim: true,
-        required: true
+        
     },
     users : [{
         type: mongoose.Schema.Types.ObjectId, ref: 'user',
