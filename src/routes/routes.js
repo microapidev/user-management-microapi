@@ -164,12 +164,12 @@ router.get("/companies/:id/teams", auth, company.getAllTeams);
 
 //delete team
 //done
-router.delete("/companies/:id/teams/:id", auth, company.deleteTeam);
+router.delete("/companies/:company_id/teams/:team_id", auth, company.deleteTeam);
 //update team info done
-router.put("/companies/:id/teams/:id", auth, company.updateTeamInfo);
+router.put("/companies/:company_id/teams/:team_id", auth, company.updateTeamInfo);
 
 //set team description done
-router.post("/companies/:id/teams/:id", auth, company.teamDescription);
+router.post("/companies/:company_id/teams/:team_id", auth, company.teamDescription);
 
 //Delete user from company
 router.patch(
