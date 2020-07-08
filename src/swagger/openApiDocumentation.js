@@ -2,8 +2,8 @@ const openApiDocumentation = {
   swagger: "3.0",
   openapi: "3.0.1",
   info: {
-    title: " Dockerized User Management Micro-Service",
-    description: "A Dockerized Microservice for User Management",
+    title: " A Dockerized Microservice for User Management",
+    description: "The API is responsible for various actions of the User. Such actions includes :adding a user, deleting a user, updating user info etc. To get started, sign up with the a ServicerUser and generate a token. The token is used in the bearer header to autheticate your calls. ENJOY!",
     contact: {
       name: "User APIs",
     },
@@ -948,133 +948,133 @@ const openApiDocumentation = {
         },
       },
     },
-    "/v1/users/{id}/avatar": {
-      get: {
-        tags: ["CRUD Operations"],
-        description: "Get User Avatar",
-        security: [
-          {
-            bearerAuth: {},
-          },
-        ],
-        operationId: "getUserAvatar",
-        parameters: [
-          {
-            name: "id",
-            in: "path",
-            schema: {
-              type: "Buffer",
-            },
-          },
-        ],
-        responses: {
-          "200": {
-            description: "Success",
-            content: {
-              "application/json": {
-                schema: {
-                  $ref: "#/components/schemas/Response",
-                },
-              },
-            },
-          },
-          "400": {
-            description: "Bad Request",
-            content: {
-              "application/json": {
-                schema: {
-                  $ref: "#/components/schemas/Response",
-                },
-              },
-            },
-          },
-        },
-      },
-      put: {
-        tags: ["CRUD Operations"],
-        description: "Set User Avatar",
-        security: [
-          {
-            bearerAuth: {},
-          },
-        ],
-        operationId: "setUserAvatar",
-        parameters: [
-          {
-            name: "id",
-            in: "path",
-            schema: {
-              type: "Buffer",
-            },
+    // "/v1/users/{id}/avatar": {
+    //   get: {
+    //     tags: ["CRUD Operations"],
+    //     description: "Get User Avatar",
+    //     security: [
+    //       {
+    //         bearerAuth: {},
+    //       },
+    //     ],
+    //     operationId: "getUserAvatar",
+    //     parameters: [
+    //       {
+    //         name: "id",
+    //         in: "path",
+    //         schema: {
+    //           type: "Buffer",
+    //         },
+    //       },
+    //     ],
+    //     responses: {
+    //       "200": {
+    //         description: "Success",
+    //         content: {
+    //           "application/json": {
+    //             schema: {
+    //               $ref: "#/components/schemas/Response",
+    //             },
+    //           },
+    //         },
+    //       },
+    //       "400": {
+    //         description: "Bad Request",
+    //         content: {
+    //           "application/json": {
+    //             schema: {
+    //               $ref: "#/components/schemas/Response",
+    //             },
+    //           },
+    //         },
+    //       },
+    //     },
+    //   },
+    //   put: {
+    //     tags: ["CRUD Operations"],
+    //     description: "Set User Avatar",
+    //     security: [
+    //       {
+    //         bearerAuth: {},
+    //       },
+    //     ],
+    //     operationId: "setUserAvatar",
+    //     parameters: [
+    //       {
+    //         name: "id",
+    //         in: "path",
+    //         schema: {
+    //           type: "Buffer",
+    //         },
             
-          },
-        ],
-        responses: {
-          "200": {
-            description: "Success",
-            content: {
-              "application/json": {
-                schema: {
-                  $ref: "#/components/schemas/Response",
-                },
-              },
-            },
-          },
-          "400": {
-            description: "Bad Request",
-            content: {
-              "application/json": {
-                schema: {
-                  $ref: "#/components/schemas/Response",
-                },
-              },
-            },
-          },
-        },
-      },
-      delete: {
-        tags: ["CRUD Operations"],
-        description: "Delete user Avatar",
-        operationId: "removeUserAvatar",
-        security: [
-          {
-            bearerAuth: {},
-          },
-        ],
-        parameters: [
-          {
-            name: "id",
-            in: "path",
-            schema: {
-              type: "Buffer",
-            },
+    //       },
+    //     ],
+    //     responses: {
+    //       "200": {
+    //         description: "Success",
+    //         content: {
+    //           "application/json": {
+    //             schema: {
+    //               $ref: "#/components/schemas/Response",
+    //             },
+    //           },
+    //         },
+    //       },
+    //       "400": {
+    //         description: "Bad Request",
+    //         content: {
+    //           "application/json": {
+    //             schema: {
+    //               $ref: "#/components/schemas/Response",
+    //             },
+    //           },
+    //         },
+    //       },
+    //     },
+    //   },
+    //   delete: {
+    //     tags: ["CRUD Operations"],
+    //     description: "Delete user Avatar",
+    //     operationId: "removeUserAvatar",
+    //     security: [
+    //       {
+    //         bearerAuth: {},
+    //       },
+    //     ],
+    //     parameters: [
+    //       {
+    //         name: "id",
+    //         in: "path",
+    //         schema: {
+    //           type: "Buffer",
+    //         },
             
-          },
-        ],
-        responses: {
-          "200": {
-            description: "Success",
-            content: {
-              "application/json": {
-                schema: {
-                  $ref: "#/components/schemas/Response",
-                },
-              },
-            },
-          },
-          "400": {
-            description: "Bad Request",
-            content: {
-              "application/json": {
-                schema: {
-                  $ref: "#/components/schemas/Response",
-                },
-              },
-            },
-          },
-        },
-      },
-    },
+    //       },
+    //     ],
+    //     responses: {
+    //       "200": {
+    //         description: "Success",
+    //         content: {
+    //           "application/json": {
+    //             schema: {
+    //               $ref: "#/components/schemas/Response",
+    //             },
+    //           },
+    //         },
+    //       },
+    //       "400": {
+    //         description: "Bad Request",
+    //         content: {
+    //           "application/json": {
+    //             schema: {
+    //               $ref: "#/components/schemas/Response",
+    //             },
+    //           },
+    //         },
+    //       },
+    //     },
+    //   },
+    // },
     "/v1/users/{id}/address": {
       get: {
         tags: ["CRUD Operations"],
@@ -1313,212 +1313,6 @@ const openApiDocumentation = {
         tags: ["CRUD Operations"],
         description: "Deactivate a user",
         operationId: "deActivateUsers",
-        security: [
-          {
-            bearerAuth: {},
-          },
-        ],
-        parameters: [
-          {
-            name: "id",
-            in: "path",
-            schema: {
-              type: "string",
-            },
-            required: true,
-          },
-        ],
-        responses: {
-          "200": {
-            description: "Success",
-            content: {
-              "application/json": {
-                schema: {
-                  $ref: "#/components/schemas/Response",
-                },
-              },
-            },
-          },
-          "400": {
-            description: "Bad Request",
-            content: {
-              "application/json": {
-                schema: {
-                  $ref: "#/components/schemas/Response",
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-    "/v1/users/sms/{id}": {
-      put: {
-        tags: ["CRUD Operations"],
-        description: "Send OTP to registered phonenumber",
-        operationId: "sendOtpSms",
-        security: [
-          {
-            bearerAuth: {},
-          },
-        ],
-        parameters: [
-          {
-            name: "id",
-            in: "path",
-            schema: {
-              type: "string",
-            },
-            required: true,
-          },
-        ],
-        requestBody: {
-          content: {
-            "application/json": {
-              schema: {
-                type: "object",
-                  properties: {
-                    phone: {
-                      type: "string"
-            }
-          },
-              },
-            },
-          },
-          required: true,
-        },
-        responses: {
-          "200": {
-            description: "Success",
-            content: {
-              "application/json": {
-                schema: {
-                  $ref: "#/components/schemas/Response",
-                },
-              },
-            },
-          },
-          "400": {
-            description: "Bad Request",
-            content: {
-              "application/json": {
-                schema: {
-                  $ref: "#/components/schemas/Response",
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-    "/v1/users/changephone/{id}": {
-      patch: {
-        tags: ["CRUD Operations"],
-        description: "use OTP to change phone number",
-        operationId: " changePhoneWithSms",
-        security: [
-          {
-            bearerAuth: {},
-          },
-        ],
-        parameters: [
-          {
-            name: "id",
-            in: "path",
-            schema: {
-              type: "string",
-            },
-            required: true,
-          },
-        ],
-        responses: {
-          "200": {
-            description: "Success",
-            content: {
-              "application/json": {
-                schema: {
-                  $ref: "#/components/schemas/Response",
-                },
-              },
-            },
-          },
-          "400": {
-            description: "Bad Request",
-            content: {
-              "application/json": {
-                schema: {
-                  $ref: "#/components/schemas/Response",
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-    "/v1/users/email/{id}": {
-      put: {
-        tags: ["CRUD Operations"],
-        description: "send OTP to registered email address",
-        operationId: " sendOtpEmail",
-        security: [
-          {
-            bearerAuth: {},
-          },
-        ],
-        parameters: [
-          {
-            name: "id",
-            in: "path",
-            schema: {
-              type: "string",
-            },
-            required: true,
-          },
-        ],
-        requestBody: {
-          content: {
-            "application/json": {
-              schema: {
-                type: "object",
-                  properties: {
-                    email: {
-                      type: "string"
-            }
-          },
-              },
-            },
-          },
-          required: true,
-        },
-        responses: {
-          "200": {
-            description: "Success",
-            content: {
-              "application/json": {
-                schema: {
-                  $ref: "#/components/schemas/Response",
-                },
-              },
-            },
-          },
-          "400": {
-            description: "Bad Request",
-            content: {
-              "application/json": {
-                schema: {
-                  $ref: "#/components/schemas/Response",
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-    "/v1/users/changeemail/{id}": {
-      patch: {
-        tags: ["CRUD Operations"],
-        description: "use OTP to change email address",
-        operationId: " changeEmail",
         security: [
           {
             bearerAuth: {},

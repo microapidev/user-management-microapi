@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const newUser = require("../controllers/userController");
 const company = require("../controllers/companyController");
-const upload = require("../controllers/upload");
+// const upload = require("../controllers/upload");
 const auth = require("../middleware/auth");
 
 //generate token.....done
@@ -65,18 +65,6 @@ router.get("/users/:id/gender", auth, newUser.getUserGender);
 //set user gender...done
 router.put("/users/:id/gender", auth, newUser.setUserGender);
 
-//send otp to registered phonenumber....
-router.put("/users/sms/:id", auth, newUser.sendOtpSms);
-
-//use otp to change phone number
-router.patch("/users/changephone/:id", auth, newUser.changePhoneWithSms);
-
-//send otp to registered email address
-router.put("/users/email/:id", auth, newUser.sendOtpEmail);
-
-//use otp to change email address
-router.patch("/users/changeemail/:id", auth, newUser.changeEmail);
-
 //set user address.....done
 router.put("/users/:id/address", auth, newUser.setUserAddress);
 
@@ -90,13 +78,13 @@ router.get("/users/status/active", auth, newUser.getActiveUsers);
 router.get("/users/status/inactive", auth, newUser.getInActiveUsers);
 
 //Get Avatar
-router.get("/users/:id/avatar", auth, newUser.getUserAvatar);
+// router.get("/users/:id/avatar", auth, newUser.getUserAvatar);
 
 //Set Avatar
-router.put("/users/:id/avatar",auth, upload.single("avatar"),newUser.setUserAvatar);
+// router.put("/users/:id/avatar",auth, upload.single("avatar"),newUser.setUserAvatar);
 
 //Delete Avatar
-router.delete("/users/:id/avatar", auth, newUser.removeUserAvatar);
+// router.delete("/users/:id/avatar", auth, newUser.removeUserAvatar);
 
 //Get self
 router.get("/me", auth, newUser.getMe);
