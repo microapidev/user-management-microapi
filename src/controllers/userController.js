@@ -163,7 +163,7 @@ const user = {
   },
   removeUser: async (req, res) => {
     try {
-      const user = await userModel.findByIdAndDelete({
+      const user = await userModel.findOneAndDelete({
         _id: req.params.id,
         creatorId: req.user._id,
       });
