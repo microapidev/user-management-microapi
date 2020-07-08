@@ -85,63 +85,60 @@ const company = {
             errHandler(err,req)
         }
     },
-    deleteTeam : (req, res) => {
-        Team.findOne({_id: req.params.id}).then(
-            (Team) => {
-              Team.deleteOne({_id: req.params.id}).then(
-                  () => {
-                    res.status(200).json({
-                        message: 'Deleted'
-                    });
-                  }
-              ).catch(
-                  (error) => {
-                    res.status(400).json({
-                        error:error
-                    });
-                  }
-              );
-            }
-        );
+    deleteTeam : async (req, res) => {
+      try {
+        const team = await teamModel.findOne({_id: req.params.team_id});
+        if(!team){
+          return res.status(404).json({
+            status: "Failed",
+            message: "Could not find team"
+          })
+        }
+        await team.remove();
+        return res.status(200).json({
+          status: "Success",
+          message: "Team deleted"
+        })
+      } catch (error) {
+        errHandler(error, res);
+      }
     },
-    updateTeamInfo : (req, res, next) => {
-        const Team = new Team({
-            _id: req.params.id,
-            name: req.body.name,
-            description: req.body.description,
+    updateTeamInfo : async (req, res) => {
+      try {
+        const team = await teamModel.findOne({_id: req.params.team_id});
+        if(!team){
+          return res.status(404).json({
+            status: "Failed",
+            message: "Could not find team"
+          })
+        }
+        team.name = req.body.name || team.name;
+        team.description = req.body.description || team.description;
+        const data = await team.save();
+        return res.status(200).json({
+          status: "Success",
+          message: "Team updated",
+          data
         });
-        Team.updateOne({_id: req.params.id}, Team).then(
-            () => {
-              res.status(201).json({
-                message: 'Team updated successfully!'
-              });
-            }
-          ).catch(
-            (error) => {
-              res.status(400).json({
-                error: error
-              });
-            }
-        );
+      } catch (error) {
+        errHandler(error, res);
+      }
     },
-    teamDescription : (req, res, next) => {
-        const Team = new Team({
-            _id: req.params.id,
-            description: req.body.description,
-          });
-          Team.save().then(
-            () => {
-              res.status(201).json({
-                message: 'Post saved successfully!'
-              });
-            }
-          ).catch(
-            (error) => {
-              res.status(400).json({
-                error: error
-              });
-            }
-           );
+    teamDescription : async (req, res) => {
+      try {
+        const team = await teamModel.findOne({_id: req.params.team_id});
+        if(!team){
+          return res.status(404).json({
+            status: "Failed",
+            message: "Could not find team"
+          })
+        }
+        team.description = req.body.description || team.description;
+        const data = await team.save();
+        return res.status(200).json({status: "Success", message: "Team description updated", data});
+      } catch (error) {
+        errHandler(error, res);
+      }
     },
     getUserTeam: async(req, res) =>{
         const user = await userModel.findOne({_id: req.params.id})
