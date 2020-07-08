@@ -16,7 +16,6 @@ const CompanySchema = mongoose.Schema(
     companyinfo: {
       type: String,
       trim: true,
-      required: true,
     },
     users: [
       {

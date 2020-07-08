@@ -565,249 +565,75 @@ const user = {
       errHandler(err, res);
     }
   },
-  getUserAvatar: async (req, res) => {
-    try {
-      const user = await userModel.findOne({
-        _id: req.params.id,
-        creatorId: req.user._id,
-      });
-      if (!user)
-        return res
-          .status(404)
-          .json({ status: "Failed", message: "user not found", data: null });
-      if (!user.avatar)
-        return res.status(404).json({
-          status: "Failed",
-          message: "user does not have an avatar",
-          data: null,
-        });
-      res.set("Content-Type", "image/png");
-      res.send(user.avatar);
-    } catch (err) {
-      errHandler(err, res);
-    }
-  },
-
-  setUserAvatar: async (req, res) => {
-    try {
-      const user = await userModel.findOne({
-        _id: req.params.id,
-        creatorId: req.user._id,
-      });
-      if (!user)
-        return res.status(404).json({
-          status: "Failed",
-          message: "Avatar not set: user not found",
-          data: null,
-        });
-      const url = req.protocol + "://" + req.get("host") + req.originalUrl;
-      const buffer = await sharp(req.file.buffer)
-        .resize({ width: 200, height: 200 })
-        .png()
-        .toBuffer();
-      user.avatar = buffer;
-      user.url = url;
-      await user.save().then(() =>
-        res.status(200).json({
-          status: "Success",
-          message: "Avatar updated!",
-          data: { url },
-        })
-      );
-    } catch (err) {
-      errHandler(err, res);
-    }
-  },
-
-  removeUserAvatar: async (req, res) => {
-    try {
-      const user = await userModel.findOne({
-        _id: req.params.id,
-        creatorId: req.user._id,
-      });
-      if (!user)
-        return res.status(404).json({
-          status: "Failed",
-          message: "Delete operation failed: user not found",
-          data: null,
-        });
-      user.avatar = undefined;
-      user.url = "N/A";
-      await user.save();
-      res.status(200).send({
-        status: "Success",
-        message: "Profile image deleted successfully",
-        data: null,
-      });
-    } catch (err) {
-      errHandler(err, res);
-    }
-  },
-  // setUserLevel: async (req, res) => {
+  // getUserAvatar: async (req, res) => {
   //   try {
-  //     const user = await userModel
-  //       .findOneAndUpdate(
-  //         { _id: req.params.id },
-  //         { level: req.body.level },
-  //         { new: true, runValidators: true }
-  //       )
-  //       .select(["-avatar"]);
+  //     const user = await userModel.findById(req.params.id);
+  //     if (!user)
+  //       return res
+  //         .status(404)
+  //         .json({ status: "Failed", message: "user not found", data: null });
+  //     if (!user.avatar)
+  //       return res.status(404).json({
+  //         status: "Failed",
+  //         message: "user does not have an avatar",
+  //         data: null,
+  //       });
+  //     res.set("Content-Type", "image/png");
+  //     res.send(user.avatar);
+  //   } catch (err) {
+  //     errHandler(err, res);
+  //   }
+  // },
+
+  // setUserAvatar: async (req, res) => {
+  //   try {
+  //     const user = await userModel.findById(req.params.id);
   //     if (!user)
   //       return res.status(404).json({
   //         status: "Failed",
-  //         message: "level not set: user not found",
+  //         message: "Avatar not set: user not found",
   //         data: null,
   //       });
-  //     res.json({
+  //     const url = req.protocol + "://" + req.get("host") + req.originalUrl;
+  //     const buffer = await sharp(req.file.buffer)
+  //       .resize({ width: 200, height: 200 })
+  //       .png()
+  //       .toBuffer();
+  //     user.avatar = buffer;
+  //     user.url = url;
+  //     await user.save().then(() =>
+  //       res.status(200).json({
+  //         status: "Success",
+  //         message: "Avatar updated!",
+  //         data: { url },
+  //       })
+  //     );
+  //   } catch (err) {
+  //     errHandler(err, res);
+  //   }
+  // },
+
+  // removeUserAvatar: async (req, res) => {
+  //   try {
+  //     const user = await userModel.findById(req.params.id);
+  //     if (!user)
+  //       return res.status(404).json({
+  //         status: "Failed",
+  //         message: "Delete operation failed: user not found",
+  //         data: null,
+  //       });
+  //     user.avatar = undefined;
+  //     user.url = "N/A";
+  //     await user.save();
+  //     res.status(200).send({
   //       status: "Success",
-  //       message: "User level updated!",
-  //       data: user,
+  //       message: "Profile image deleted successfully",
+  //       data: null,
   //     });
   //   } catch (err) {
   //     errHandler(err, res);
   //   }
   // },
-  // getUserLevel: async (req, res) => {
-  //   try {
-  //     const user = await userModel.findOne({ _id: req.params.id });
-  //     if (!user)
-  //       return res
-  //         .status(404)
-  //         .json({ status: "Failed", message: "user not found", data: null });
-  //     res.json({ status: "Success", message: "User level", data: user.level });
-  //   } catch (err) {
-  //     errHandler(err, res);
-  //   }
-  // },
-
-  sendOtpSms: async (req, res) => {
-    let nums = crypto.randomBytes(4).toString("hex");
-    try {
-      const user = await userModel.findOne({ _id: req.params.id });
-      if (!user)
-        return res
-          .status(404)
-          .json({ status: "Failed", message: "user not found", data: null });
-      const sent = await userModel.findOneAndUpdate(
-        { _id: user._id },
-        { otp: nums }
-      );
-
-      if (!sent)
-        return res
-          .status(404)
-          .json({ status: "Failed", message: "Otp not found", data: null });
-      return res.status(200).json({
-        status: "Success",
-        message:
-          "Otp sent to your registered phone number,use it to change your phone number",
-        otp: nums,
-      });
-    } catch (err) {
-      errHandler(err, res);
-    }
-  },
-  changePhoneWithSms: async (req, res) => {
-    const phoneNumber = req.body.phone;
-    try {
-      const otp = req.query.otp;
-      const change = await userModel.findOne({ otp: otp });
-      if (!change)
-        return res
-          .status(404)
-          .json({ status: "Failed", message: "Otp not found", data: null });
-
-      const user = await userModel.findOneAndUpdate(
-        { _id: change._id },
-        { phone: phoneNumber },
-        { new: true, runValidators: true }
-      );
-      if (!user)
-        return res.status(404).json({
-          status: "Failed",
-          message:
-            "Error phone number cannot be changed at this time. please try again later",
-          data: null,
-        });
-      return (
-        res.status(200).json({
-          status: "Success",
-          message: "Phone number changed successfully",
-          data: phoneNumber,
-        }),
-        userModel.findOneAndUpdate({ _id: change._id }, { $unset: { otp: 1 } })
-      );
-
-      //can refactor to insert sms sending api for confirmation
-    } catch (err) {
-      errHandler(err, res);
-    }
-  },
-  sendOtpEmail: async (req, res) => {
-    const users = await userModel.find({ creatorId: req.user_id });
-    if (users) {
-      let nums = crypto.randomBytes(4).toString("hex");
-      try {
-        const user = await userModel.findOne({ _id: req.params.id });
-        if (!user)
-          return res
-            .status(404)
-            .json({ status: "Failed", message: "user not found", data: null });
-        const sent = await userModel.findOneAndUpdate(
-          { _id: user._id },
-          { otp: nums }
-        );
-        if (!sent)
-          return res
-            .status(404)
-            .json({ status: "Failed", message: "Otp not found", data: null });
-        return res.status(200).json({
-          status: "Success",
-          message: "Otp sent to your email,use it to change your email address",
-          otp: nums,
-        });
-      } catch (err) {
-        errHandler(err, res);
-      }
-    }
-    return res
-      .status(404)
-      .json({ status: "Failed", message: "user not found", data: null });
-  },
-  changeEmail: async (req, res) => {
-    const email = req.body.email;
-    try {
-      const otp = req.query.otp;
-      const change = await userModel.findOne({ otp: otp });
-      if (!change)
-        return res
-          .status(404)
-          .json({ status: "Failed", message: "Otp not found", data: null });
-      const user = await userModel.findOneAndUpdate(
-        { _id: change._id, creatorId: req.user._id },
-        { email: email },
-        { new: true, runValidators: true }
-      );
-      if (!user)
-        return res.status(404).json({
-          status: "Failed",
-          message:
-            "Error, Email address cannot be changed at this time. please try again later",
-          data: null,
-        });
-      return (
-        res.status(200).json({
-          status: "Success",
-          message: "Email address changed successfully",
-          data: email,
-        }),
-        userModel.findOneAndUpdate({ _id: change._id }, { $unset: { otp: 1 } })
-      );
-      //can refactor to insert email sending api for confirmation
-    } catch (err) {
-      errHandler(err, res);
-    }
-  },
 
   inviteUserToTeam: async (req, res) => {
     try {
