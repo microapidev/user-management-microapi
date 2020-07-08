@@ -26,4 +26,6 @@ const serviceUserSchema  = new Schema({
     }
 })
 
-module.exports = mongoose.model('service_user', serviceUserSchema)
+const serviceUser = mongoose.model('service_user', serviceUserSchema);
+
+module.exports = serviceUser;

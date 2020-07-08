@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
+const moment = require("moment-timezone");
+const service_user = require('./service_user');
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
@@ -48,10 +50,18 @@ const UserSchema = new Schema({
             }
 		}
     },
+    timezone: {
+        type: String
+    },
     address: {
         type: String,
         trim: true,
     },
+    creatorId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "serviceUser",
+        required: true
+    }, 
     gender: { 
         type: String,
         enum: ['male', 'female'],
@@ -81,13 +91,20 @@ const UserSchema = new Schema({
         ref: 'company'
     }
     
-});
+},{
+    timestamps: true
+  }
+);
 
 //updated_at should be the current time only when updated
 UserSchema.pre('save', function(next) {
     this.updated_at = Date.now();
+
+    // Timezone
+    this.timezone = moment.tz.guess();
     next();
 });
 
 
-module.exports = mongoose.model('User', UserSchema);
+const User = mongoose.model('User', UserSchema);
+module.exports = User;
