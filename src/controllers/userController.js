@@ -2,14 +2,13 @@ const env = require("dotenv");
 const sharp = require("sharp");
 const crypto = require("crypto");
 
-const companyModel = require('../models/company');
-const teamModel = require('../models/team');
-const userModel = require('../models/user');
+const companyModel = require("../models/company");
+const teamModel = require("../models/team");
+const userModel = require("../models/user");
 const serviceUser = require("../models/service_user");
 const { TeamInviteModel, CompanyInviteModel } = require("../models/invite");
 const jwtUtil = require("../security/jwtAuth");
 const { errHandler } = require("../handlers/errorHandlers");
-
 
 env.config();
 
@@ -93,10 +92,9 @@ const user = {
     }
   },
 
-  
   getAllUsers: (req, res) => {
     userModel
-      .find({creatorId : req.user._id})
+      .find({ creatorId: req.user._id })
       .select(["-avatar"])
       .then((users) =>
         res.json({ status: "Success", message: "List of Users", data: users })
@@ -128,12 +126,11 @@ const user = {
       age,
       status,
       address,
-      creatorId
     } = req.body;
     const gender = req.body.gender.toLowerCase();
     try {
-      const user = await userModel.findOne({email:req.body.email});
-      if(!user){
+      const user = await userModel.findOne({ email: req.body.email });
+      if (!user) {
         const newUser = new userModel({
           firstName,
           lastName,
@@ -143,7 +140,7 @@ const user = {
           status,
           address,
           gender,
-          creatorId
+          creatorId: req.user._id,
         });
         await newUser.save();
         res.json({
@@ -151,16 +148,12 @@ const user = {
           message: "New user created!",
           data: newUser,
         });
-      }
-      else {
-        res
-        .status(400)
-        .json({
+      } else {
+        res.status(400).json({
           status: "Fail",
-          message: "User already Exists"
-        })
+          message: "User already Exists",
+        });
       }
-      
     } catch (err) {
       errHandler(err, res);
     }
@@ -412,12 +405,12 @@ const user = {
         });
       } else {
         user.status = "ACTIVE";
-        user.save()
+        user.save();
         res.json({
           status: "Success",
           message: "User Activated",
           data: user.status,
-          user
+          user,
         });
       }
     } catch (err) {
@@ -434,13 +427,12 @@ const user = {
         });
       } else {
         user.status = "INACTIVE";
-        user.save()
+        user.save();
         res.json({
           status: "Success",
           message: "User Deactivated",
           data: user.status,
-          user
-          
+          user,
         });
       }
     } catch (err) {
@@ -686,11 +678,14 @@ const user = {
             "Error phone number cannot be changed at this time. please try again later",
           data: null,
         });
-      return res.status(200).json({
-        status: "Success",
-        message: "Phone number changed successfully",
-        data: phoneNumber,
-      }), userModel.findOneAndUpdate({ _id: change._id }, { $unset: { otp: 1 } });
+      return (
+        res.status(200).json({
+          status: "Success",
+          message: "Phone number changed successfully",
+          data: phoneNumber,
+        }),
+        userModel.findOneAndUpdate({ _id: change._id }, { $unset: { otp: 1 } })
+      );
 
       //can refactor to insert sms sending api for confirmation
     } catch (err) {
@@ -715,8 +710,7 @@ const user = {
           .json({ status: "Failed", message: "Otp not found", data: null });
       return res.status(200).json({
         status: "Success",
-        message:
-          "Otp sent to your email,use it to change your email address",
+        message: "Otp sent to your email,use it to change your email address",
         otp: nums,
       });
     } catch (err) {
@@ -744,11 +738,14 @@ const user = {
             "Error, Email address cannot be changed at this time. please try again later",
           data: null,
         });
-      return res.status(200).json({
-        status: "Success",
-        message: "Email address changed successfully",
-        data: email,
-      }), userModel.findOneAndUpdate({ _id: change._id }, { $unset: { otp: 1 } })
+      return (
+        res.status(200).json({
+          status: "Success",
+          message: "Email address changed successfully",
+          data: email,
+        }),
+        userModel.findOneAndUpdate({ _id: change._id }, { $unset: { otp: 1 } })
+      );
       //can refactor to insert email sending api for confirmation
     } catch (err) {
       errHandler(err, res);
@@ -760,18 +757,18 @@ const user = {
       const { userId, teamId, invitedUserId } = req.params;
       if (userId === invitedUserId) throw new Error("Cannot invite self");
 
-      const team = await teamModel.findOne({ _id: teamId })
-      const user = await userModel.findById(userId)
-      const invitedUser = await userModel.findById(invitedUserId)
+      const team = await teamModel.findOne({ _id: teamId });
+      const user = await userModel.findById(userId);
+      const invitedUser = await userModel.findById(invitedUserId);
 
-      if (!user) throw new Error('User not found');
-      if (!team) throw new Error('Team not found');
-      if (!invitedUser) throw new Error('Invited User not found');
+      if (!user) throw new Error("User not found");
+      if (!team) throw new Error("Team not found");
+      if (!invitedUser) throw new Error("Invited User not found");
 
-      team.users = team.users.concat(invitedUser)
-      invitedUser.team = team
+      team.users = team.users.concat(invitedUser);
+      invitedUser.team = team;
 
-      await team.save()
+      await team.save();
       await invitedUser.save();
 
       const newInvite = await new TeamInviteModel({
@@ -801,18 +798,18 @@ const user = {
       const { userId, companyId, invitedUserId } = req.params;
       if (userId === invitedUserId) throw new Error("Cannot invite self");
 
-      const company = await companyModel.findOne({ _id: companyId })
-      const user = await userModel.findById(userId)
-      const invitedUser = await userModel.findById(invitedUserId)
+      const company = await companyModel.findOne({ _id: companyId });
+      const user = await userModel.findById(userId);
+      const invitedUser = await userModel.findById(invitedUserId);
 
-      if (!user) throw new Error('User not found');
-      if (!company) throw new Error('Team not found');
-      if (!invitedUser) throw new Error('Invited User not found');
+      if (!user) throw new Error("User not found");
+      if (!company) throw new Error("Team not found");
+      if (!invitedUser) throw new Error("Invited User not found");
 
-      company.users = company.users.concat(invitedUser)
-      invitedUser.company = company
+      company.users = company.users.concat(invitedUser);
+      invitedUser.company = company;
 
-      await company.save()
+      await company.save();
       await invitedUser.save();
 
       const newInvite = await new CompanyInviteModel({
