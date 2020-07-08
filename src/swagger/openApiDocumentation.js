@@ -2,10 +2,11 @@ const openApiDocumentation = {
   swagger: "3.0",
   openapi: "3.0.1",
   info: {
-    title: "Team Granite's Dockerized User Management Micro-Service",
-    description: "A Dockerized Microservice for User Managements",
+    title: " A Dockerized Microservice for User Management",
+    description:
+      "The API is responsible for various actions of the User. Such actions includes :adding a user, deleting a user, updating user info etc. To get started, sign up with the a ServicerUser and generate a token. The token is used in the bearer header to autheticate your calls. ENJOY!",
     contact: {
-      name: "Team Granite",
+      name: "User APIs",
     },
   },
   server: [
@@ -29,6 +30,86 @@ const openApiDocumentation = {
     bearerAuth: {},
   },
   paths: {
+    "/v1/addServiceUser": {
+      post: {
+        tags: ["API Auth"],
+        description: "Add Service User",
+        operationId: "addServiceUser",
+        security: [],
+        requestBody: {
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/ServiceUser",
+              },
+            },
+          },
+        },
+        responses: {
+          "200": {
+            description: "Success",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Response",
+                },
+              },
+            },
+          },
+          "400": {
+            description: "Bad Request",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Response",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+
+    "/v1/token": {
+      get: {
+        tags: ["API Auth"],
+        description: "Generate Token",
+        operationId: "generateToken",
+        security: [],
+        parameters: [
+          {
+            name: "email",
+            in: "query",
+            schema: {
+              type: "string",
+            },
+            required: true,
+          },
+        ],
+        responses: {
+          "200": {
+            description: "Success",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Response",
+                },
+              },
+            },
+          },
+          "400": {
+            description: "Bad Request",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Response",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
     "/v1/me": {
       get: {
         tags: ["CRUD Operations"],
@@ -97,85 +178,7 @@ const openApiDocumentation = {
         },
       },
     },
-    "/v1/addServiceUser": {
-      post: {
-        tags: ["API Auth"],
-        description: "Add Service User",
-        operationId: "addServiceUser",
-        security: [],
-        requestBody: {
-          content: {
-            "application/json": {
-              schema: {
-                $ref: "#/components/schemas/ServiceUser",
-              },
-            },
-          },
-        },
-        responses: {
-          "200": {
-            description: "Success",
-            content: {
-              "application/json": {
-                schema: {
-                  $ref: "#/components/schemas/Response",
-                },
-              },
-            },
-          },
-          "400": {
-            description: "Bad Request",
-            content: {
-              "application/json": {
-                schema: {
-                  $ref: "#/components/schemas/Response",
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-    "/v1/token": {
-      get: {
-        tags: ["API Auth"],
-        description: "Generate Token",
-        operationId: "generateToken",
-        security: [],
-        parameters: [
-          {
-            name: "email",
-            in: "query",
-            schema: {
-              type: "string",
-            },
-            required: true,
-          },
-        ],
-        responses: {
-          "200": {
-            description: "Success",
-            content: {
-              "application/json": {
-                schema: {
-                  $ref: "#/components/schemas/Response",
-                },
-              },
-            },
-          },
-          "400": {
-            description: "Bad Request",
-            content: {
-              "application/json": {
-                schema: {
-                  $ref: "#/components/schemas/Response",
-                },
-              },
-            },
-          },
-        },
-      },
-    },
+
     "/v1/users": {
       get: {
         tags: ["CRUD Operations"],
@@ -386,12 +389,12 @@ const openApiDocumentation = {
       put: {
         tags: ["CRUD Operations"],
         description: "Set User First Name",
+        operationId: "setUserFirstName",
         security: [
           {
             bearerAuth: {},
           },
         ],
-        operationId: "setUserFirstName",
         parameters: [
           {
             name: "id",
@@ -402,6 +405,21 @@ const openApiDocumentation = {
             required: true,
           },
         ],
+        requestBody: {
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  firstName: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
+          required: true,
+        },
         responses: {
           "200": {
             description: "Success",
@@ -488,6 +506,21 @@ const openApiDocumentation = {
             required: true,
           },
         ],
+        requestBody: {
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  lastName: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
+          required: true,
+        },
         responses: {
           "200": {
             description: "Success",
@@ -574,6 +607,21 @@ const openApiDocumentation = {
             required: true,
           },
         ],
+        requestBody: {
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  email: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
+          required: true,
+        },
         responses: {
           "200": {
             description: "Success",
@@ -660,6 +708,21 @@ const openApiDocumentation = {
             required: true,
           },
         ],
+        requestBody: {
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  phone: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
+          required: true,
+        },
         responses: {
           "200": {
             description: "Success",
@@ -746,92 +809,21 @@ const openApiDocumentation = {
             required: true,
           },
         ],
-        responses: {
-          "200": {
-            description: "Success",
-            content: {
-              "application/json": {
-                schema: {
-                  $ref: "#/components/schemas/Response",
+        requestBody: {
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  age: {
+                    type: "string",
+                  },
                 },
               },
             },
           },
-          "400": {
-            description: "Bad Request",
-            content: {
-              "application/json": {
-                schema: {
-                  $ref: "#/components/schemas/Response",
-                },
-              },
-            },
-          },
+          required: true,
         },
-      },
-    },
-    "/v1/users/{id}/status": {
-      get: {
-        tags: ["CRUD Operations"],
-        description: "Get User Status",
-        security: [
-          {
-            bearerAuth: {},
-          },
-        ],
-        operationId: "getUserStatus",
-        parameters: [
-          {
-            name: "id",
-            in: "path",
-            schema: {
-              type: "string",
-            },
-            required: true,
-          },
-        ],
-        responses: {
-          "200": {
-            description: "Success",
-            content: {
-              "application/json": {
-                schema: {
-                  $ref: "#/components/schemas/Response",
-                },
-              },
-            },
-          },
-          "400": {
-            description: "Bad Request",
-            content: {
-              "application/json": {
-                schema: {
-                  $ref: "#/components/schemas/Response",
-                },
-              },
-            },
-          },
-        },
-      },
-      put: {
-        tags: ["CRUD Operations"],
-        description: "Set User Status",
-        security: [
-          {
-            bearerAuth: {},
-          },
-        ],
-        operationId: "setUserStatus",
-        parameters: [
-          {
-            name: "id",
-            in: "path",
-            schema: {
-              type: "string",
-            },
-            required: true,
-          },
-        ],
         responses: {
           "200": {
             description: "Success",
@@ -918,6 +910,21 @@ const openApiDocumentation = {
             required: true,
           },
         ],
+        requestBody: {
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  gender: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
+          required: true,
+        },
         responses: {
           "200": {
             description: "Success",
@@ -942,6 +949,133 @@ const openApiDocumentation = {
         },
       },
     },
+    // "/v1/users/{id}/avatar": {
+    //   get: {
+    //     tags: ["CRUD Operations"],
+    //     description: "Get User Avatar",
+    //     security: [
+    //       {
+    //         bearerAuth: {},
+    //       },
+    //     ],
+    //     operationId: "getUserAvatar",
+    //     parameters: [
+    //       {
+    //         name: "id",
+    //         in: "path",
+    //         schema: {
+    //           type: "Buffer",
+    //         },
+    //       },
+    //     ],
+    //     responses: {
+    //       "200": {
+    //         description: "Success",
+    //         content: {
+    //           "application/json": {
+    //             schema: {
+    //               $ref: "#/components/schemas/Response",
+    //             },
+    //           },
+    //         },
+    //       },
+    //       "400": {
+    //         description: "Bad Request",
+    //         content: {
+    //           "application/json": {
+    //             schema: {
+    //               $ref: "#/components/schemas/Response",
+    //             },
+    //           },
+    //         },
+    //       },
+    //     },
+    //   },
+    //   put: {
+    //     tags: ["CRUD Operations"],
+    //     description: "Set User Avatar",
+    //     security: [
+    //       {
+    //         bearerAuth: {},
+    //       },
+    //     ],
+    //     operationId: "setUserAvatar",
+    //     parameters: [
+    //       {
+    //         name: "id",
+    //         in: "path",
+    //         schema: {
+    //           type: "Buffer",
+    //         },
+
+    //       },
+    //     ],
+    //     responses: {
+    //       "200": {
+    //         description: "Success",
+    //         content: {
+    //           "application/json": {
+    //             schema: {
+    //               $ref: "#/components/schemas/Response",
+    //             },
+    //           },
+    //         },
+    //       },
+    //       "400": {
+    //         description: "Bad Request",
+    //         content: {
+    //           "application/json": {
+    //             schema: {
+    //               $ref: "#/components/schemas/Response",
+    //             },
+    //           },
+    //         },
+    //       },
+    //     },
+    //   },
+    //   delete: {
+    //     tags: ["CRUD Operations"],
+    //     description: "Delete user Avatar",
+    //     operationId: "removeUserAvatar",
+    //     security: [
+    //       {
+    //         bearerAuth: {},
+    //       },
+    //     ],
+    //     parameters: [
+    //       {
+    //         name: "id",
+    //         in: "path",
+    //         schema: {
+    //           type: "Buffer",
+    //         },
+
+    //       },
+    //     ],
+    //     responses: {
+    //       "200": {
+    //         description: "Success",
+    //         content: {
+    //           "application/json": {
+    //             schema: {
+    //               $ref: "#/components/schemas/Response",
+    //             },
+    //           },
+    //         },
+    //       },
+    //       "400": {
+    //         description: "Bad Request",
+    //         content: {
+    //           "application/json": {
+    //             schema: {
+    //               $ref: "#/components/schemas/Response",
+    //             },
+    //           },
+    //         },
+    //       },
+    //     },
+    //   },
+    // },
     "/v1/users/{id}/address": {
       get: {
         tags: ["CRUD Operations"],
@@ -1004,6 +1138,21 @@ const openApiDocumentation = {
             required: true,
           },
         ],
+        requestBody: {
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  address: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
+          required: true,
+        },
         responses: {
           "200": {
             description: "Success",
@@ -1077,6 +1226,94 @@ const openApiDocumentation = {
         tags: ["CRUD Operations"],
         description: "Get Status of inActive Users",
         operationId: "getInActiveUsers",
+        security: [
+          {
+            bearerAuth: {},
+          },
+        ],
+        parameters: [
+          {
+            name: "id",
+            in: "path",
+            schema: {
+              type: "string",
+            },
+            required: true,
+          },
+        ],
+        responses: {
+          "200": {
+            description: "Success",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Response",
+                },
+              },
+            },
+          },
+          "400": {
+            description: "Bad Request",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Response",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    "/v1/users/activate/{id}": {
+      put: {
+        tags: ["CRUD Operations"],
+        description: "Activate a user",
+        operationId: "activateUsers",
+        security: [
+          {
+            bearerAuth: {},
+          },
+        ],
+        parameters: [
+          {
+            name: "id",
+            in: "path",
+            schema: {
+              type: "string",
+            },
+            required: true,
+          },
+        ],
+        responses: {
+          "200": {
+            description: "Success",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Response",
+                },
+              },
+            },
+          },
+          "400": {
+            description: "Bad Request",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Response",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    "/v1/users/deactivate/{id}": {
+      put: {
+        tags: ["CRUD Operations"],
+        description: "Deactivate a user",
+        operationId: "deActivateUsers",
         security: [
           {
             bearerAuth: {},
@@ -1237,6 +1474,48 @@ const openApiDocumentation = {
           },
         },
       },
+      put: {
+        tags: ["Company CRUD Operations"],
+        description: "Update Company Info",
+        operationId: "setCompanyInfoCompanyById",
+        security: [
+          {
+            bearerAuth: {},
+          },
+        ],
+        parameters: [
+          {
+            name: "id",
+            in: "path",
+            schema: {
+              type: "string",
+            },
+            required: true,
+          },
+        ],
+        responses: {
+          "200": {
+            description: "Success",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Response",
+                },
+              },
+            },
+          },
+          "400": {
+            description: "Bad Request",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Response",
+                },
+              },
+            },
+          },
+        },
+      },
     },
     "/v1/companies/{id}/users": {
       get: {
@@ -1357,6 +1636,126 @@ const openApiDocumentation = {
           },
           {
             name: "userId",
+            in: "path",
+            schema: {
+              type: "string",
+            },
+            required: true,
+          },
+        ],
+        responses: {
+          "200": {
+            description: "Success",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Response",
+                },
+              },
+            },
+          },
+          "400": {
+            description: "Bad Request",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Response",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    "/v1//companies/team/invite/{userId}/{teamId}/{invitedUserId}": {
+      post: {
+        tags: ["Company CRUD Operations"],
+        description: "Invite a user to a team",
+        operationId: "inviteUserToTeam",
+        security: [
+          {
+            bearerAuth: {},
+          },
+        ],
+        parameters: [
+          {
+            name: "userId",
+            in: "path",
+            schema: {
+              type: "string",
+            },
+            required: true,
+          },
+          {
+            name: "teamId",
+            in: "path",
+            schema: {
+              type: "string",
+            },
+            required: true,
+          },
+          {
+            name: "invitedUserId",
+            in: "path",
+            schema: {
+              type: "string",
+            },
+            required: true,
+          },
+        ],
+        responses: {
+          "200": {
+            description: "Success",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Response",
+                },
+              },
+            },
+          },
+          "400": {
+            description: "Bad Request",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Response",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    "/v1/companies/invite//:userId/:companyId/:invitedUserId": {
+      post: {
+        tags: ["Company CRUD Operations"],
+        description: "Invite a user to a Company",
+        operationId: "inviteUserToCompany",
+        security: [
+          {
+            bearerAuth: {},
+          },
+        ],
+        parameters: [
+          {
+            name: "userId",
+            in: "path",
+            schema: {
+              type: "string",
+            },
+            required: true,
+          },
+          {
+            name: "companyId",
+            in: "path",
+            schema: {
+              type: "string",
+            },
+            required: true,
+          },
+          {
+            name: "invitedUserId",
             in: "path",
             schema: {
               type: "string",
@@ -1824,6 +2223,10 @@ const openApiDocumentation = {
           name: {
             type: "string",
             description: "Team Name",
+          },
+          description: {
+            type: "string",
+            description: "Team Description",
           },
         },
       },

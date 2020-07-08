@@ -5,7 +5,6 @@ const helmet = require("helmet");
 const router = require("./src/routes/routes");
 const openApiDocumentation = require("./src/swagger/openApiDocumentation");
 const swaggerUi = require("swagger-ui-express");
-
 const app = express();
 const port = process.env.PORT || 5000;
 const connectToDatabase = require("./src/db/mongoose");
@@ -34,6 +33,7 @@ app.use((error, req, res, next) => {
   });
 });
 
+
 app.listen(port, () =>
-  console.log(`Team Granite App is running on port: ${port}`)
+  console.log(`User Management API is running on port: ${port}`)
 );
