@@ -92,10 +92,13 @@ router.get("/me", auth, newUser.getMe);
 //Delete self
 router.delete("/me", auth, newUser.deleteMe);
 
-
 //Add user to a team
 //done
-router.post("/companies/teams/:teamId/users/:userId",auth,company.setUserTeam);
+router.post(
+  "/companies/teams/:teamId/users/:userId",
+  auth,
+  company.setUserTeam
+);
 
 //Delete user from a team
 //done
@@ -126,17 +129,23 @@ router.post(
 );
 
 //Invite a user to a team
-router.post("/companies/team/invite/:userId/:teamId/:invitedUserId", newUser.inviteUserToTeam);
+router.post(
+  "/companies/team/invite/:userId/:teamId/:invitedUserId",
+  newUser.inviteUserToTeam
+);
 
 //Invite a user to a Company
-router.post("/companies/invite//:userId/:companyId/:invitedUserId", newUser.inviteUserToCompany);
+router.post(
+  "/companies/invite//:userId/:companyId/:invitedUserId",
+  newUser.inviteUserToCompany
+);
 
 //Create new company
 //done
 router.post("/companies", auth, company.createCompany);
 
 // / update company info
-router.put('/companies/:id', auth, company.setCompanyInfo);
+router.put("/companies/:id", auth, company.setCompanyInfo);
 
 //create a new team
 //done
@@ -164,12 +173,24 @@ router.get("/companies/:id/teams", auth, company.getAllTeams);
 
 //delete team
 //done
-router.delete("/companies/:company_id/teams/:team_id", auth, company.deleteTeam);
+router.delete(
+  "/companies/:company_id/teams/:team_id",
+  auth,
+  company.deleteTeam
+);
 //update team info done
-router.put("/companies/:company_id/teams/:team_id", auth, company.updateTeamInfo);
+router.put(
+  "/companies/:company_id/teams/:team_id",
+  auth,
+  company.updateTeamInfo
+);
 
 //set team description done
-router.post("/companies/:company_id/teams/:team_id", auth, company.teamDescription);
+router.post(
+  "/companies/:company_id/teams/:team_id",
+  auth,
+  company.teamDescription
+);
 
 //Delete user from company
 router.patch(
