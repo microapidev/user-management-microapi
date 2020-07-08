@@ -3,7 +3,8 @@ const openApiDocumentation = {
   openapi: "3.0.1",
   info: {
     title: " A Dockerized Microservice for User Management",
-    description: "The API is responsible for various actions of the User. Such actions includes :adding a user, deleting a user, updating user info etc. To get started, sign up with the a ServicerUser and generate a token. The token is used in the bearer header to autheticate your calls. ENJOY!",
+    description:
+      "The API is responsible for various actions of the User. Such actions includes :adding a user, deleting a user, updating user info etc. To get started, sign up with the a ServicerUser and generate a token. The token is used in the bearer header to autheticate your calls. ENJOY!",
     contact: {
       name: "User APIs",
     },
@@ -68,7 +69,7 @@ const openApiDocumentation = {
         },
       },
     },
-    
+
     "/v1/token": {
       get: {
         tags: ["API Auth"],
@@ -177,7 +178,7 @@ const openApiDocumentation = {
         },
       },
     },
-    
+
     "/v1/users": {
       get: {
         tags: ["CRUD Operations"],
@@ -409,11 +410,11 @@ const openApiDocumentation = {
             "application/json": {
               schema: {
                 type: "object",
-                  properties: {
-                    firstName: {
-                type: "string"
-            }
-          },
+                properties: {
+                  firstName: {
+                    type: "string",
+                  },
+                },
               },
             },
           },
@@ -510,11 +511,11 @@ const openApiDocumentation = {
             "application/json": {
               schema: {
                 type: "object",
-                  properties: {
-                    lastName: {
-                type: "string"
-            }
-          },
+                properties: {
+                  lastName: {
+                    type: "string",
+                  },
+                },
               },
             },
           },
@@ -611,11 +612,11 @@ const openApiDocumentation = {
             "application/json": {
               schema: {
                 type: "object",
-                  properties: {
-                    email: {
-                      type: "string"
-            }
-          },
+                properties: {
+                  email: {
+                    type: "string",
+                  },
+                },
               },
             },
           },
@@ -712,11 +713,11 @@ const openApiDocumentation = {
             "application/json": {
               schema: {
                 type: "object",
-                  properties: {
-                    phone: {
-                type: "string"
-            }
-          },
+                properties: {
+                  phone: {
+                    type: "string",
+                  },
+                },
               },
             },
           },
@@ -813,11 +814,11 @@ const openApiDocumentation = {
             "application/json": {
               schema: {
                 type: "object",
-                  properties: {
-                    age: {
-                type: "string"
-            }
-          },
+                properties: {
+                  age: {
+                    type: "string",
+                  },
+                },
               },
             },
           },
@@ -914,11 +915,11 @@ const openApiDocumentation = {
             "application/json": {
               schema: {
                 type: "object",
-                  properties: {
-                    gender: {
-                      type: "string"
-            }
-          },
+                properties: {
+                  gender: {
+                    type: "string",
+                  },
+                },
               },
             },
           },
@@ -1006,7 +1007,7 @@ const openApiDocumentation = {
     //         schema: {
     //           type: "Buffer",
     //         },
-            
+
     //       },
     //     ],
     //     responses: {
@@ -1048,7 +1049,7 @@ const openApiDocumentation = {
     //         schema: {
     //           type: "Buffer",
     //         },
-            
+
     //       },
     //     ],
     //     responses: {
@@ -1142,11 +1143,11 @@ const openApiDocumentation = {
             "application/json": {
               schema: {
                 type: "object",
-                  properties: {
-                    address: {
-                      type: "string"
-            }
-          },
+                properties: {
+                  address: {
+                    type: "string",
+                  },
+                },
               },
             },
           },
@@ -1475,42 +1476,46 @@ const openApiDocumentation = {
       },
       put: {
         tags: ["Company CRUD Operations"],
-          description: "Update Company Info",
-          operationId: "setCompanyInfoCompanyById",
-          security: [{
+        description: "Update Company Info",
+        operationId: "setCompanyInfoCompanyById",
+        security: [
+          {
             bearerAuth: {},
-          }, ],
-          parameters: [{
+          },
+        ],
+        parameters: [
+          {
             name: "id",
             in: "path",
             schema: {
               type: "string",
             },
             required: true,
-          }, ],
-          responses: {
-            "200": {
-              description: "Success",
-              content: {
-                "application/json": {
-                  schema: {
-                    $ref: "#/components/schemas/Response",
-                  },
-                },
-              },
-            },
-            "400": {
-              description: "Bad Request",
-              content: {
-                "application/json": {
-                  schema: {
-                    $ref: "#/components/schemas/Response",
-                  },
+          },
+        ],
+        responses: {
+          "200": {
+            description: "Success",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Response",
                 },
               },
             },
           },
-      }
+          "400": {
+            description: "Bad Request",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Response",
+                },
+              },
+            },
+          },
+        },
+      },
     },
     "/v1/companies/{id}/users": {
       get: {
@@ -2219,9 +2224,9 @@ const openApiDocumentation = {
             type: "string",
             description: "Team Name",
           },
-          description:{
+          description: {
             type: "string",
-            description: "Team Description"
+            description: "Team Description",
           },
         },
       },
