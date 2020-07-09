@@ -2210,6 +2210,50 @@ const openApiDocumentation = {
         },
       },
     },
+    "/companies/{companyId}": {
+      delete: {
+        tags: ["Company CRUD Operations"],
+        description: "Remove a Company",
+        operationId: "removeCompany",
+        security: [
+          {
+            bearerAuth: {},
+          },
+        ],
+        parameters: [
+          {
+            name: "companyId",
+            in: "path",
+            schema: {
+              type: "string",
+            },
+            required: true,
+          },
+        ],
+        responses: {
+          "200": {
+            description: "Success",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Response",
+                },
+              },
+            },
+          },
+          "400": {
+            description: "Bad Request",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Response",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
   },
 
   components: {

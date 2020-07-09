@@ -26,6 +26,7 @@ const company = {
         name,
         description,
         creatorId: req.user._id,
+        company: company._id
       });
       await newTeam.save();
 
@@ -133,28 +134,6 @@ const company = {
       });
     } catch (err) {
       errHandler(err, req);
-    }
-  },
-  deleteTeam: async (req, res) => {
-    try {
-      const team = await teamModel({
-        _id: req.params.id,
-        creatorId: req.user._id,
-      });
-
-      if (!team) {
-        return res.status(404).json({
-          status: "Failed",
-          message: "Team not found",
-        });
-      }
-      await team.remove();
-      return res.status(200).json({
-        status: "Success",
-        message: "Team deleted",
-      });
-    } catch (error) {
-      errHandler(error, res);
     }
   },
   updateTeamInfo: async (req, res) => {
@@ -296,22 +275,42 @@ const company = {
   },
 
   deleteCompany: async (req, res) => {
-    companyModel
-      .findOneAndRemove({ _id: req.params.companyId, creatorId: req.user._id })
-      .then((transaction) => {
-        if (!transaction) {
-          return res.status(404).send({
-            message: "Company not found with id " + req.params.companyId,
-          });
-        } else {
-          res.send({
-            message: "Company deleted successfully! " + req.params.companyId,
-          });
-        }
-      })
-      .catch((err) => {
-        errHandler(err, res);
+    const companyId = req.params.companyId;
+    const creatorId = req.user.id;
+    const company = await companyModel.findOne({_id: companyId, creatorId: creatorId});
+    if (!company) {
+      res.status(400).json({
+        status: "Failed",
+        message: `Company not found ${companyId}`,
+        data: null
       });
+    }
+    try {
+      const users = company.users;
+      const teams = company.teams;
+    
+      if(users){
+        //update all company users
+        await userModel.updateMany({_id: {$in: users } },  {company: null});
+      }
+      if (teams) {
+        //delete all teams under company
+        await teamModel.deleteMany({ _id: {$in: teams } });  
+      }
+     
+      //delete the company
+      await companyModel.deleteOne({_id: company._id})
+
+      res.status(200).json({
+        status: "Success",
+        message: `Company with id ${company._id} deleted successfully`,
+        data: null
+      });
+      
+    } catch (err) {
+      errHandler(err, res);
+      
+    }
   },
 
   setUserCompany: async (req, res) => {
@@ -366,6 +365,7 @@ const company = {
         creatorId: req.user._id,
       });
 
+
       if (!user)
         return res
           .status(404)
@@ -374,6 +374,16 @@ const company = {
         return res
           .status(404)
           .json({ status: "Failed", message: "Team not found", data: null });
+      
+      const sameCompany = team.company.equals(user.company);
+      const userAlreadyInTeam = user.team.equals(team._id);
+      if(!sameCompany){
+        return res.status(404).json({status:"Failed", message:"User and Team not in the same company", data: null});
+      }
+      
+      if(userAlreadyInTeam){
+        return res.status(404).json({status:"Failed", message:"User is already in team", data: team});
+      }
 
       team.users = team.users.concat(user);
       user.team = team;
@@ -395,6 +405,10 @@ const company = {
       _id: companyId,
       creatorId: req.user._id,
     });
+    const team = await teamModel.findOne({
+      creatorId: req.user._id,
+      users: userId
+    })
 
     if (!company)
       return res
@@ -404,6 +418,10 @@ const company = {
     try {
       company.users.pull({ _id: userId });
       await company.save();
+      if (team) {
+        team.users.pull({_id: userId});
+        await team.save();
+      }
       res
         .status(200)
         .json({ status: "Success", message: "User Deleted.", data: company });
@@ -483,7 +501,9 @@ const company = {
         return res
           .status(404)
           .json({ status: "Failed", message: "Team not found", data: null });
-
+        
+      await userModel.updateMany({_id: {$in: team.users}}, {team: null});
+      await teamModel.deleteOne({_id: teamId});
       const companyResult = await companyModel.updateOne(
         { _id: companyId },
         { $pull: { teams: teamId } },
