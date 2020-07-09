@@ -217,39 +217,6 @@ const openApiDocumentation = {
           },
         },
       },
-      delete: {
-        tags: ["CRUD Operations"],
-        description: "Delete ServiceUser Account",
-        operationId: "deleteSelf",
-        security: [
-          {
-            bearerAuth: {},
-          },
-        ],
-        parameters: [],
-        responses: {
-          "200": {
-            description: "Success",
-            content: {
-              "application/json": {
-                schema: {
-                  $ref: "#/components/schemas/Response",
-                },
-              },
-            },
-          },
-          "400": {
-            description: "Bad Request",
-            content: {
-              "application/json": {
-                schema: {
-                  $ref: "#/components/schemas/Response",
-                },
-              },
-            },
-          },
-        },
-      },
     },
 
     "/v1/users": {
