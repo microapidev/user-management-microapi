@@ -786,7 +786,10 @@ const openApiDocumentation = {
           },
         },
       },
-    },
+      },
+
+
+
     "/v1/users/{id}/age": {
       get: {
         tags: ["CRUD Operations"],
@@ -887,7 +890,181 @@ const openApiDocumentation = {
           },
         },
       },
-    },
+      },
+
+      "/v1/users/{id}/userName": {
+          get: {
+              tags: ["CRUD Operations"],
+              description: "Get User's UserName",
+              security: [
+                  {
+                      bearerAuth: {},
+                  },
+              ],
+              operationId: "getUserName",
+              parameters: [
+                  {
+                      name: "id",
+                      in: "path",
+                      schema: {
+                          type: "string",
+                      },
+                      required: true,
+                  },
+              ],
+              responses: {
+                  "200": {
+                      description: "Success",
+                      content: {
+                          "application/json": {
+                              schema: {
+                                  $ref: "#/components/schemas/Response",
+                              },
+                          },
+                      },
+                  },
+                  "400": {
+                      description: "Bad Request",
+                      content: {
+                          "application/json": {
+                              schema: {
+                                  $ref: "#/components/schemas/Response",
+                              },
+                          },
+                      },
+                  },
+              },
+          },
+          put: {
+              tags: ["CRUD Operations"],
+              description: "Set User's UserName",
+              security: [
+                  {
+                      bearerAuth: {},
+                  },
+              ],
+              operationId: "setUserName",
+              parameters: [
+                  {
+                      name: "id",
+                      in: "path",
+                      schema: {
+                          type: "string",
+                      },
+                      required: true,
+                  },
+              ],
+              responses: {
+                  "200": {
+                      description: "Success",
+                      content: {
+                          "application/json": {
+                              schema: {
+                                  $ref: "#/components/schemas/Response",
+                              },
+                          },
+                      },
+                  },
+                  "400": {
+                      description: "Bad Request",
+                      content: {
+                          "application/json": {
+                              schema: {
+                                  $ref: "#/components/schemas/Response",
+                              },
+                          },
+                      },
+                  },
+              },
+          },
+      },
+
+      "/v1/users/{id}/country": {
+          get: {
+              tags: ["CRUD Operations"],
+              description: "Get User Country",
+              security: [
+                  {
+                      bearerAuth: {},
+                  },
+              ],
+              operationId: "getUserCountry",
+              parameters: [
+                  {
+                      name: "id",
+                      in: "path",
+                      schema: {
+                          type: "string",
+                      },
+                      required: true,
+                  },
+              ],
+              responses: {
+                  "200": {
+                      description: "Success",
+                      content: {
+                          "application/json": {
+                              schema: {
+                                  $ref: "#/components/schemas/Response",
+                              },
+                          },
+                      },
+                  },
+                  "400": {
+                      description: "Bad Request",
+                      content: {
+                          "application/json": {
+                              schema: {
+                                  $ref: "#/components/schemas/Response",
+                              },
+                          },
+                      },
+                  },
+              },
+          },
+          put: {
+              tags: ["CRUD Operations"],
+              description: "Set User Country",
+              security: [
+                  {
+                      bearerAuth: {},
+                  },
+              ],
+              operationId: "setUserCountry",
+              parameters: [
+                  {
+                      name: "id",
+                      in: "path",
+                      schema: {
+                          type: "string",
+                      },
+                      required: true,
+                  },
+              ],
+              responses: {
+                  "200": {
+                      description: "Success",
+                      content: {
+                          "application/json": {
+                              schema: {
+                                  $ref: "#/components/schemas/Response",
+                              },
+                          },
+                      },
+                  },
+                  "400": {
+                      description: "Bad Request",
+                      content: {
+                          "application/json": {
+                              schema: {
+                                  $ref: "#/components/schemas/Response",
+                              },
+                          },
+                      },
+                  },
+              },
+          },
+      },
     "/v1/users/{id}/gender": {
       get: {
         tags: ["CRUD Operations"],

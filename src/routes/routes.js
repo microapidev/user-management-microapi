@@ -63,6 +63,18 @@ router.get("/users/:id/age", auth, newUser.getUserAge);
 //set user age...age
 router.put("/users/:id/age", auth, newUser.setUserAge);
 
+//get user's username....username
+router.get("/users/:id/userName", auth, newUser.getUserName);
+
+//set user's username....username
+router.put("/users/:id/userName", auth, newUser.setUserName);
+
+//get user country....country
+router.get("/users/:id/country", auth, newUser.setUserCountry);
+
+//set user country...country
+router.put("/users/:id/country", auth, newUser.setUserCountry);
+
 //get user gender...done
 router.get("/users/:id/gender", auth, newUser.getUserGender);
 

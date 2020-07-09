@@ -15,7 +15,13 @@ const UserSchema = new Schema(
       type: String,
       required: true,
       trim: true,
-    },
+        },
+        userName: {
+            type: String,
+            required: true,
+            trim: true
+        },
+
     email: {
       type: String,
       required: true,
@@ -28,6 +34,11 @@ const UserSchema = new Schema(
           throw new Error("Invalid Email");
         }
       },
+    },
+ country: {
+        type: String,
+        required: true,
+        trim: true
     },
     phone: {
       type: String,
