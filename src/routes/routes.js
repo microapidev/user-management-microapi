@@ -118,7 +118,7 @@ router.get("/companies/user/:id", auth, company.getUserCompany);
 
 //Delete company by Id
 //done
-router.delete("/companies/delete/:companyId", auth, company.deleteCompany);
+router.delete("/companies/:companyId", auth, company.deleteCompany);
 
 //Add user to a company
 //done
@@ -171,13 +171,6 @@ router.get("/companies/team/:id/users", auth, company.getTeamMembers);
 //done
 router.get("/companies/:id/teams", auth, company.getAllTeams);
 
-//delete team
-//done
-router.delete(
-  "/companies/:company_id/teams/:team_id",
-  auth,
-  company.deleteTeam
-);
 //update team info done
 router.put(
   "/companies/:company_id/teams/:team_id",
