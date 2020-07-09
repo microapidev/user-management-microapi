@@ -170,19 +170,27 @@ const user = {
   },
   removeUser: async (req, res) => {
     try {
-      const user = await userModel.findOneAndDelete({
-        _id: req.params.id,
-        creatorId: req.user._id,
-      });
-      if (!user)
+      const user = await userModel.findOne({_id: req.params.id, creatorId: req.user._id})
+      if (!user){
         return res.status(404).json({
           status: "Failed",
           message: "Delete failed: user not found",
           data: null,
         });
-      res
+      }
+      await companyModel.updateOne({_id: user.company},{$pull:{users:{ $in:[user._id] } } });
+      await teamModel.updateOne({_id: user.team},{$pull:{users:{ $in:[user._id] } } })
+      const res = await userModel.deleteOne({ _id: user._id });
+      if (res.deletedCount > 0) {
+        res
         .status(200)
         .json({ status: "Success", message: "User removed!", data: null });
+      }
+      else{
+        res
+        .status(500)
+        .json({ status: "Failed", message: "Failed to remove user", data: null });
+      }
     } catch (err) {
       errHandler(err, res);
     }
