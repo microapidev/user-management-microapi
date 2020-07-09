@@ -41,30 +41,24 @@ const user = {
     }
   },
 
-  generateToken: async (req, res) => {
-    const email = req.query.email;
-    await serviceUser.findOne({ email }).then((user) => {
-      if (!user) {
-        res.status(400).json({
+  getToken: async (req, res) => {
+    const { email = "" } = req.body;
+    try {
+      const user = await serviceUser.findOne({ email });
+      if (!user)
+        return res.status(401).json({
           status: "Failed",
-          message: `User was Not found`,
-          data: null,
+          message: "Invalid email",
         });
-        return;
-      }
 
-      try {
-        res.json({
-          status: "Success",
-          message: `Generated Token for ${email}`,
-          data: jwtUtil.createToken(user.email, user.apiKey),
-        });
-      } catch (e) {
-        res
-          .status(400)
-          .json({ status: "Failed", message: `${e.message}`, data: null });
-      }
-    });
+      return res.status(200).json({
+        status: "Success",
+        message: "Your apiKey",
+        data: user.apiKey,
+      });
+    } catch (error) {
+      errHandler(error, res);
+    }
   },
 
   getMe: (req, res) => {

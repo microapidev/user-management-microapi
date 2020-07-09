@@ -5,8 +5,8 @@ const company = require("../controllers/companyController");
 // const upload = require("../controllers/upload");
 const auth = require("../middleware/auth");
 
-//generate token.....done
-router.get("/token", newUser.generateToken);
+//login to get apiKey
+router.post("/apikey", newUser.getToken);
 
 //create service user....done
 router.post("/addServiceUser", newUser.addServiceUser);
