@@ -70,22 +70,27 @@ const openApiDocumentation = {
       },
     },
 
-    "/v1/token": {
-      get: {
+    "/v1/apikey": {
+      post: {
         tags: ["API Auth"],
-        description: "Generate Token",
-        operationId: "generateToken",
+        description: "Get apiKey",
+        operationId: "getapiKey",
         security: [],
-        parameters: [
-          {
-            name: "email",
-            in: "query",
-            schema: {
-              type: "string",
+        requestBody: {
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  email: {
+                    type: "string",
+                  },
+                },
+              },
             },
-            required: true,
           },
-        ],
+          required: true,
+        },
         responses: {
           "200": {
             description: "Success",
@@ -2304,11 +2309,9 @@ const openApiDocumentation = {
     },
     securitySchemes: {
       bearerAuth: {
-        type: "http",
-        scheme: "bearer",
-        bearerFormat: "JWT",
-        name: "Authorization",
-        in: "header",
+        type: "apiKey",
+        name: "apikey",
+        in: "query",
       },
     },
   },
