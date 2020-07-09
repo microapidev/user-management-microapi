@@ -2,14 +2,13 @@ const env = require("dotenv");
 const sharp = require("sharp");
 const crypto = require("crypto");
 
-const companyModel = require('../models/company');
-const teamModel = require('../models/team');
-const userModel = require('../models/user');
+const companyModel = require("../models/company");
+const teamModel = require("../models/team");
+const userModel = require("../models/user");
 const serviceUser = require("../models/service_user");
 const { TeamInviteModel, CompanyInviteModel } = require("../models/invite");
 const jwtUtil = require("../security/jwtAuth");
 const { errHandler } = require("../handlers/errorHandlers");
-
 
 env.config();
 
@@ -93,10 +92,9 @@ const user = {
     }
   },
 
-  
   getAllUsers: (req, res) => {
     userModel
-      .find()
+      .find({ creatorId: req.user._id })
       .select(["-avatar"])
       .then((users) =>
         res.json({ status: "Success", message: "List of Users", data: users })
@@ -109,7 +107,9 @@ const user = {
   },
   getUser: async (req, res) => {
     try {
-      const user = await userModel.findById(req.params.id).select(["-avatar"]);
+      const user = await userModel
+        .findOne({ _id: req.params.id, creatorId: req.user._id })
+        .select(["-avatar"]);
       if (!user)
         return res
           .status(404)
@@ -129,10 +129,11 @@ const user = {
       status,
       address,
     } = req.body;
-    const gender = req.body.gender.toLowerCase();
+    const gender =
+      (req.body.gender && req.body.gender.toLowerCase()) || undefined;
     try {
-      const user = await userModel.findOne({email:req.body.email});
-      if(!user){
+      const user = await userModel.findOne({ email: req.body.email });
+      if (!user) {
         const newUser = new userModel({
           firstName,
           lastName,
@@ -142,6 +143,7 @@ const user = {
           status,
           address,
           gender,
+          creatorId: req.user._id,
         });
         await newUser.save();
         res.json({
@@ -149,23 +151,22 @@ const user = {
           message: "New user created!",
           data: newUser,
         });
-      }
-      else {
-        res
-        .status(400)
-        .json({
+      } else {
+        res.status(400).json({
           status: "Fail",
-          message: "User already Exists"
-        })
+          message: "User already Exists",
+        });
       }
-      
     } catch (err) {
       errHandler(err, res);
     }
   },
   removeUser: async (req, res) => {
     try {
-      const user = await userModel.findByIdAndDelete({ _id: req.params.id });
+      const user = await userModel.findOneAndDelete({
+        _id: req.params.id,
+        creatorId: req.user._id,
+      });
       if (!user)
         return res.status(404).json({
           status: "Failed",
@@ -183,7 +184,7 @@ const user = {
     try {
       const user = await userModel
         .findOneAndUpdate(
-          { _id: req.params.id },
+          { _id: req.params.id, creatorId: req.user._id },
           { firstName: req.body.firstName },
           { new: true, runValidators: true }
         )
@@ -207,7 +208,7 @@ const user = {
     try {
       const user = await userModel
         .findOneAndUpdate(
-          { _id: req.params.id },
+          { _id: req.params.id, creatorId: req.user._id },
           { lastName: req.body.lastName },
           { new: true, runValidators: true }
         )
@@ -218,16 +219,21 @@ const user = {
           message: "Last name not set: user not found",
           data: null,
         });
-      res
-        .status(200)
-        .json({ status: "Success", message: "Last name updated!", data: user });
+      res.status(200).json({
+        status: "Success",
+        message: "Last name updated!",
+        data: user,
+      });
     } catch (err) {
       errHandler(err, res);
     }
   },
   getUserFirstName: async (req, res) => {
     try {
-      const user = await userModel.findOne({ _id: req.params.id });
+      const user = await userModel.findOne({
+        _id: req.params.id,
+        creatorId: req.user._id,
+      });
       if (!user)
         return res
           .status(404)
@@ -243,7 +249,10 @@ const user = {
   },
   getUserLastName: async (req, res) => {
     try {
-      const user = await userModel.findOne({ _id: req.params.id });
+      const user = await userModel.findOne({
+        _id: req.params.id,
+        creatorId: req.user._id,
+      });
       if (!user)
         return res
           .status(404)
@@ -261,7 +270,7 @@ const user = {
     try {
       const user = await userModel
         .findOneAndUpdate(
-          { _id: req.params.id },
+          { _id: req.params.id, creatorId: req.user._id },
           { email: req.body.email },
           { new: true, runValidators: true }
         )
@@ -281,7 +290,7 @@ const user = {
     try {
       const user = await userModel
         .findOneAndUpdate(
-          { _id: req.params.id },
+          { _id: req.params.id, creatorId: req.user._id },
           { phone: req.body.phone },
           { new: true, runValidators: true }
         )
@@ -303,19 +312,29 @@ const user = {
   },
   getUserEmail: async (req, res) => {
     try {
-      const user = await userModel.findOne({ _id: req.params.id });
+      const user = await userModel.findOne({
+        _id: req.params.id,
+        creatorId: req.user._id,
+      });
       if (!user)
         return res
           .status(404)
           .json({ status: "Failed", message: "user not found", data: null });
-      res.json({ status: "Success", message: "User email", data: user.email });
+      res.json({
+        status: "Success",
+        message: "User email",
+        data: user.email,
+      });
     } catch (err) {
       errHandler(err, res);
     }
   },
   getUserPhone: async (req, res) => {
     try {
-      const user = await userModel.findOne({ _id: req.params.id });
+      const user = await userModel.findOne({
+        _id: req.params.id,
+        creatorId: req.user._id,
+      });
       if (!user)
         return res
           .status(404)
@@ -333,7 +352,7 @@ const user = {
     try {
       const user = await userModel
         .findOneAndUpdate(
-          { _id: req.params.id },
+          { _id: req.params.id, creatorId: req.user._id },
           { age: req.body.age },
           { new: true, runValidators: true }
         )
@@ -344,14 +363,21 @@ const user = {
           message: "Age not set: user not found",
           data: null,
         });
-      res.json({ status: "Success", message: "User Age updated!", data: user });
+      res.json({
+        status: "Success",
+        message: "User Age updated!",
+        data: user,
+      });
     } catch (err) {
       errHandler(err, res);
     }
   },
   getUserAge: async (req, res) => {
     try {
-      const user = await userModel.findOne({ _id: req.params.id });
+      const user = await userModel.findOne({
+        _id: req.params.id,
+        creatorId: req.user._id,
+      });
       if (!user)
         return res
           .status(404)
@@ -381,7 +407,7 @@ const user = {
     try {
       const user = await userModel
         .findOneAndUpdate(
-          { _id: req.params.id },
+          { _id: req.params.id, creatorId: req.user._id },
           { gender: req.body.gender },
           { new: true, runValidators: true }
         )
@@ -403,19 +429,22 @@ const user = {
   },
   activateUsers: async (req, res) => {
     try {
-      const user = await userModel.findOne({ _id: req.params.id });
+      const user = await userModel.findOne({
+        _id: req.params.id,
+        creatorId: req.user._id,
+      });
       if (!user) {
         return res.status(404).send({
           message: "User not found with id " + req.params.id,
         });
       } else {
         user.status = "ACTIVE";
-        user.save()
+        user.save();
         res.json({
           status: "Success",
           message: "User Activated",
           data: user.status,
-          user
+          user,
         });
       }
     } catch (err) {
@@ -425,20 +454,22 @@ const user = {
 
   deActivateUsers: async (req, res) => {
     try {
-      const user = await userModel.findOne({ _id: req.params.id });
+      const user = await userModel.findOne({
+        _id: req.params.id,
+        creatorId: req.user._id,
+      });
       if (!user) {
         return res.status(404).send({
           message: "User not found with id " + req.params.id,
         });
       } else {
         user.status = "INACTIVE";
-        user.save()
+        user.save();
         res.json({
           status: "Success",
           message: "User Deactivated",
           data: user.status,
-          user
-          
+          user,
         });
       }
     } catch (err) {
@@ -447,7 +478,10 @@ const user = {
   },
   getUserGender: async (req, res) => {
     try {
-      const user = await userModel.findOne({ _id: req.params.id });
+      const user = await userModel.findOne({
+        _id: req.params.id,
+        creatorId: req.user._id,
+      });
       if (!user)
         return res
           .status(404)
@@ -465,7 +499,7 @@ const user = {
     try {
       const user = await userModel
         .findOneAndUpdate(
-          { _id: req.params.id },
+          { _id: req.params.id, creatorId: req.user._id },
           { address: req.body.address },
           { new: true, runValidators: true }
         )
@@ -487,7 +521,10 @@ const user = {
   },
   getUserAddress: async (req, res) => {
     try {
-      const user = await userModel.findOne({ _id: req.params.id });
+      const user = await userModel.findOne({
+        _id: req.params.id,
+        creatorId: req.user._id,
+      });
       if (!user)
         return res
           .status(404)
@@ -504,7 +541,7 @@ const user = {
   getActiveUsers: async (req, res) => {
     try {
       const users = await userModel
-        .find({ status: "ACTIVE" })
+        .find({ status: "ACTIVE", creatorId: req.user._id })
         .select(["-avatar"]);
       res.json({
         status: "Success",
@@ -518,7 +555,7 @@ const user = {
   getInActiveUsers: async (req, res) => {
     try {
       const users = await userModel
-        .find({ status: "INACTIVE" })
+        .find({ status: "INACTIVE", creatorId: req.user._id })
         .select(["-avatar"]);
       res.json({
         status: "Success",
@@ -598,25 +635,30 @@ const user = {
   //     errHandler(err, res);
   //   }
   // },
- 
 
   inviteUserToTeam: async (req, res) => {
     try {
       const { userId, teamId, invitedUserId } = req.params;
       if (userId === invitedUserId) throw new Error("Cannot invite self");
 
-      const team = await teamModel.findOne({ _id: teamId })
-      const user = await userModel.findById(userId)
-      const invitedUser = await userModel.findById(invitedUserId)
+      const team = await teamModel.findOne({
+        _id: teamId,
+        creatorId: req.user._id,
+      });
+      const user = await userModel.findOne({
+        _id: userId,
+        creatorId: req.user._id,
+      });
+      const invitedUser = await userModel.findById(invitedUserId);
 
-      if (!user) throw new Error('User not found');
-      if (!team) throw new Error('Team not found');
-      if (!invitedUser) throw new Error('Invited User not found');
+      if (!user) throw new Error("User not found");
+      if (!team) throw new Error("Team not found");
+      if (!invitedUser) throw new Error("Invited User not found");
 
-      team.users = team.users.concat(invitedUser)
-      invitedUser.team = team
+      team.users = team.users.concat(invitedUser);
+      invitedUser.team = team;
 
-      await team.save()
+      await team.save();
       await invitedUser.save();
 
       const newInvite = await new TeamInviteModel({
@@ -646,18 +688,24 @@ const user = {
       const { userId, companyId, invitedUserId } = req.params;
       if (userId === invitedUserId) throw new Error("Cannot invite self");
 
-      const company = await companyModel.findOne({ _id: companyId })
-      const user = await userModel.findById(userId)
-      const invitedUser = await userModel.findById(invitedUserId)
+      const company = await companyModel.findOne({
+        _id: companyId,
+        creatorId: req.user._id,
+      });
+      const user = await userModel.findOne({
+        _id: userId,
+        creatorId: req.user._id,
+      });
+      const invitedUser = await userModel.findById(invitedUserId);
 
-      if (!user) throw new Error('User not found');
-      if (!company) throw new Error('Team not found');
-      if (!invitedUser) throw new Error('Invited User not found');
+      if (!user) throw new Error("User not found");
+      if (!company) throw new Error("Team not found");
+      if (!invitedUser) throw new Error("Invited User not found");
 
-      company.users = company.users.concat(invitedUser)
-      invitedUser.company = company
+      company.users = company.users.concat(invitedUser);
+      invitedUser.company = company;
 
-      await company.save()
+      await company.save();
       await invitedUser.save();
 
       const newInvite = await new CompanyInviteModel({
