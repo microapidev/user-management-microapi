@@ -70,22 +70,27 @@ const openApiDocumentation = {
       },
     },
 
-    "/v1/token": {
-      get: {
+    "/v1/apikey": {
+      post: {
         tags: ["API Auth"],
-        description: "Generate Token",
-        operationId: "generateToken",
+        description: "Get apiKey",
+        operationId: "getapiKey",
         security: [],
-        parameters: [
-          {
-            name: "email",
-            in: "query",
-            schema: {
-              type: "string",
+        requestBody: {
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  email: {
+                    type: "string",
+                  },
+                },
+              },
             },
-            required: true,
           },
-        ],
+          required: true,
+        },
         responses: {
           "200": {
             description: "Success",
@@ -167,6 +172,41 @@ const openApiDocumentation = {
           },
           "400": {
             description: "Bad Request",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Response",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    "/v1/health": {
+      get: {
+        tags: ["Health Operations"],
+        description: "Get Api Health",
+        operationId: "getHealth",
+        security: [
+          {
+            bearerAuth: {},
+          },
+        ],
+        parameters: [],
+        responses: {
+          "200": {
+            description: "Success",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Response",
+                },
+              },
+            },
+          },
+          "500": {
+            description: "Unavailable",
             content: {
               "application/json": {
                 schema: {
@@ -1561,60 +1601,6 @@ const openApiDocumentation = {
         },
       },
     },
-    "v1/companies/{id}/teams": {
-      post: {
-        tags: ["Company CRUD Operations"],
-        description: "Create New Team",
-        operationId: "createNewTeam",
-        security: [
-          {
-            bearerAuth: {},
-          },
-        ],
-        requestBody: {
-          content: {
-            "application/json": {
-              schema: {
-                $ref: "#/components/schemas/Team",
-              },
-            },
-          },
-          required: true,
-        },
-        parameters: [
-          {
-            name: "id",
-            in: "path",
-            schema: {
-              type: "string",
-            },
-            required: true,
-          },
-        ],
-        responses: {
-          "200": {
-            description: "Success",
-            content: {
-              "application/json": {
-                schema: {
-                  $ref: "#/components/schemas/Response",
-                },
-              },
-            },
-          },
-          "400": {
-            description: "Bad Request",
-            content: {
-              "application/json": {
-                schema: {
-                  $ref: "#/components/schemas/Response",
-                },
-              },
-            },
-          },
-        },
-      },
-    },
     "/v1/companies/teams/{teamId}/users/{userId}": {
       post: {
         tags: ["Company CRUD Operations"],
@@ -1841,6 +1827,58 @@ const openApiDocumentation = {
             bearerAuth: {},
           },
         ],
+        parameters: [
+          {
+            name: "id",
+            in: "path",
+            schema: {
+              type: "string",
+            },
+            required: true,
+          },
+        ],
+        responses: {
+          "200": {
+            description: "Success",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Response",
+                },
+              },
+            },
+          },
+          "400": {
+            description: "Bad Request",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Response",
+                },
+              },
+            },
+          },
+        },
+      },
+      post: {
+        tags: ["Company CRUD Operations"],
+        description: "Create New Team",
+        operationId: "createNewTeam",
+        security: [
+          {
+            bearerAuth: {},
+          },
+        ],
+        requestBody: {
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/Team",
+              },
+            },
+          },
+          required: true,
+        },
         parameters: [
           {
             name: "id",
@@ -2262,11 +2300,9 @@ const openApiDocumentation = {
     },
     securitySchemes: {
       bearerAuth: {
-        type: "http",
-        scheme: "bearer",
-        bearerFormat: "JWT",
-        name: "Authorization",
-        in: "header",
+        type: "apiKey",
+        name: "apikey",
+        in: "query",
       },
     },
   },

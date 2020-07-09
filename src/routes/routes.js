@@ -2,14 +2,18 @@ const express = require("express");
 const router = express.Router();
 const newUser = require("../controllers/userController");
 const company = require("../controllers/companyController");
+const health = require("../controllers/health");
 // const upload = require("../controllers/upload");
 const auth = require("../middleware/auth");
 
-//generate token.....done
-router.get("/token", newUser.generateToken);
+//login to get apiKey
+router.post("/apikey", newUser.getToken);
 
 //create service user....done
 router.post("/addServiceUser", newUser.addServiceUser);
+
+//health check
+router.get("/health", health.getHealthCheck);
 
 //Add user....done
 router.post("/users", auth, newUser.addUser);
