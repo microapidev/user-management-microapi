@@ -183,6 +183,74 @@ const openApiDocumentation = {
         },
       },
     },
+    "/v1/health": {
+      get: {
+        tags: ["Health Operations"],
+        description: "Get Api Health",
+        operationId: "getHealth",
+        security: [
+          {
+            bearerAuth: {},
+          },
+        ],
+        parameters: [],
+        responses: {
+          "200": {
+            description: "Success",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Response",
+                },
+              },
+            },
+          },
+          "500": {
+            description: "Unavailable",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Response",
+                },
+              },
+            },
+          },
+        },
+      },
+      delete: {
+        tags: ["CRUD Operations"],
+        description: "Delete ServiceUser Account",
+        operationId: "deleteSelf",
+        security: [
+          {
+            bearerAuth: {},
+          },
+        ],
+        parameters: [],
+        responses: {
+          "200": {
+            description: "Success",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Response",
+                },
+              },
+            },
+          },
+          "400": {
+            description: "Bad Request",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Response",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
 
     "/v1/users": {
       get: {
