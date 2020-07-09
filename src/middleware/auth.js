@@ -3,10 +3,14 @@ const serviceUser = require("../models/service_user");
 
 const auth = async (req, res, next) => {
   try {
-    const token = req.header("Authorization").replace("Bearer ", "");
-    const decoded = jwtUtil.verify(token, process.env.JWT_SECRET);
-    const user = await serviceUser.findOne({ email: decoded.email });
-
+    const apiKey = req.query.apikey;
+    if (!apiKey)
+      return res.status(401).json({
+        status: "Failed",
+        message:
+          "Malformed apikey. please pass apikey as query on url like so ?apikey=YourAPIKey",
+      });
+    const user = await serviceUser.findOne({ apiKey });
     if (!user) {
       throw new Error("");
     }
