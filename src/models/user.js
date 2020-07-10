@@ -15,12 +15,12 @@ const UserSchema = new Schema(
       type: String,
       required: true,
       trim: true,
-        },
-        userName: {
-            type: String,
-            required: true,
-            trim: true
-        },
+    },
+    userName: {
+      type: String,
+      required: true,
+      trim: true,
+    },
 
     email: {
       type: String,
@@ -35,10 +35,10 @@ const UserSchema = new Schema(
         }
       },
     },
- country: {
-        type: String,
-        required: true,
-        trim: true
+    country: {
+      type: String,
+      required: true,
+      trim: true,
     },
     phone: {
       type: String,
@@ -70,14 +70,14 @@ const UserSchema = new Schema(
       trim: true,
     },
     creatorId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "service_user",
-        required: true
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "service_user",
+      required: true,
     },
-    gender: { 
-        type: String,
-        enum: ['male', 'female'],
-        required: true
+    gender: {
+      type: String,
+      enum: ["male", "female"],
+      required: true,
     },
     status: {
       type: String,
