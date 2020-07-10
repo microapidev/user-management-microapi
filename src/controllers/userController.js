@@ -192,8 +192,8 @@ const user = {
         { _id: user.team },
         { $pull: { users: { $in: [user._id] } } }
       );
-      const res = await userModel.deleteOne({ _id: user._id });
-      if (res.deletedCount > 0) {
+      const result = await userModel.deleteOne({ _id: user._id });
+      if (result.deletedCount > 0) {
         res
           .status(200)
           .json({ status: "Success", message: "User removed!", data: null });
