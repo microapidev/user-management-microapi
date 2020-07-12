@@ -3,6 +3,7 @@ const validator = require('validator');
 const Schema = mongoose.Schema
 
 
+
 const serviceUserSchema  = new Schema({
     email: {
         type: String,
@@ -22,7 +23,7 @@ const serviceUserSchema  = new Schema({
         required: true,
         unique: true,
         trim: true,
-        length: 32
+        length: 60
     }
 })
 

@@ -116,73 +116,94 @@ const user = {
   addUser: async (req, res) => {
     const {
       firstName,
-        lastName,
-        userName,
+      lastName,
+      userName,
       email,
       phone,
-        age,
-        country,
+      age,
+      country,
       status,
       address,
     } = req.body;
-    const gender =req.body.gender && req.body.gender.toLowerCase() || undefined;
-      try {
-          const userNames = userModel.findOne({ userName });
-          if (userNames) {
-              res.status(400).json({
-                  status: "Failed",
-                  message: `Username has been taken `,
-                  data: null
-              });
-          }
-          else if (!user) {
-              const user = await userModel.findOne({ email: req.body.email });
-              if (!user) {
-                  const newUser = new userModel({
-                      firstName,
-                      lastName,
-                      userName,
-                      email,
-                      phone,
-                      age,
-                      country,
-                      status,
-                      address,
-                      gender,
-                      creatorId: req.user._id,
-                  });
-                  await newUser.save();
-                  res.json({
-                      status: "Success",
-                      message: "New user created!",
-                      data: newUser,
-                  });
-              } else {
-                  res.status(400).json({
-                      status: "Fail",
-                      message: "User already Exists",
-                  });
-              }
-          }
+    const gender =
+      (req.body.gender && req.body.gender.toLowerCase()) || undefined;
+    try {
+      const userNames = await userModel.findOne({
+        userName,
+        creatorId: req.user._id,
+      });
+      if (userNames) {
+        res.status(400).json({
+          status: "Failed",
+          message: `Username has been taken `,
+          data: null,
+        });
+      } else {
+        const user = await userModel.findOne({ email: req.body.email });
+        if (!user) {
+          const newUser = new userModel({
+            firstName,
+            lastName,
+            userName,
+            email,
+            phone,
+            age,
+            country,
+            status,
+            address,
+            gender,
+            creatorId: req.user._id,
+          });
+          await newUser.save();
+          res.json({
+            status: "Success",
+            message: "New user created!",
+            data: newUser,
+          });
+        } else {
+          res.status(400).json({
+            status: "Fail",
+            message: "User already Exists",
+          });
+        }
+      }
     } catch (err) {
       errHandler(err, res);
     }
   },
   removeUser: async (req, res) => {
     try {
-      const user = await userModel.findOneAndDelete({
+      const user = await userModel.findOne({
         _id: req.params.id,
         creatorId: req.user._id,
       });
-      if (!user)
+      if (!user) {
         return res.status(404).json({
           status: "Failed",
           message: "Delete failed: user not found",
           data: null,
         });
-      res
-        .status(200)
-        .json({ status: "Success", message: "User removed!", data: null });
+      }
+      await companyModel.updateOne(
+        { _id: user.company },
+        { $pull: { users: { $in: [user._id] } } }
+      );
+      await teamModel.updateOne(
+        { _id: user.team },
+        { $pull: { users: { $in: [user._id] } } }
+      );
+      const result = await userModel.deleteOne({ _id: user._id });
+      if (result.deletedCount > 0) {
+        res
+          .status(200)
+          .json({ status: "Success", message: "User removed!", data: null });
+      } else {
+        res.status(500).json({
+          status: "Failed",
+          message: "Failed to remove user",
+          data: null,
+        });
+      }
     } catch (err) {
       errHandler(err, res);
     }
@@ -335,100 +356,97 @@ const user = {
     } catch (err) {
       errHandler(err, res);
     }
-    },
+  },
 
-    getUserName: async (req, res) => {
-        try {
-            const user = await userModel.findOne({ _id: req.params.id });
-            if (!user)
-                return res
-                    .status(404)
-                    .json({
-                        status: "Failed",
-                        message: "user not found",
-                        data: null
-                    });
-            res.json({ status: "Success", message: "User Name", data: user.userName });
-        } catch (err) {
-            errHandler(err, res);
-        }
-    },
+  getUserName: async (req, res) => {
+    try {
+      const user = await userModel.findOne({ _id: req.params.id });
+      if (!user)
+        return res.status(404).json({
+          status: "Failed",
+          message: "user not found",
+          data: null,
+        });
+      res.json({
+        status: "Success",
+        message: "User Name",
+        data: user.userName,
+      });
+    } catch (err) {
+      errHandler(err, res);
+    }
+  },
 
-    getUserCountry: async (req, res) => {
-        try {
-            const user = await userModel.findOne({ _id: req.params.id });
-            if (!user)
-                return res
-                    .status(404)
-                    .json({
-                        status: "Failed",
-                        message: "user not found",
-                        data: null
-                    });
-            res.json({
-                status: "Success",
-                message: "User Country",
-                data: user.country
-            });
-        } catch (err) {
-            errHandler(err, res);
-        }
-    },
+  getUserCountry: async (req, res) => {
+    try {
+      const user = await userModel.findOne({ _id: req.params.id });
+      if (!user)
+        return res.status(404).json({
+          status: "Failed",
+          message: "user not found",
+          data: null,
+        });
+      res.json({
+        status: "Success",
+        message: "User Country",
+        data: user.country,
+      });
+    } catch (err) {
+      errHandler(err, res);
+    }
+  },
 
+  setUserName: async (req, res) => {
+    try {
+      const user = await userModel.findOneAndUpdate(
+        { _id: req.params.id },
+        { userName: req.body.userName },
+        { new: true, runValidators: true }
+      );
 
-    setUserName: async (req, res) => {
-        try {
-            const user = await userModel
-                .findOneAndUpdate(
-                    { _id: req.params.id },
-                    { userName: req.body.userName },
-                    { new: true, runValidators: true }
-                );
+      if (!user)
+        return res.status(404).json({
+          status: "Failed",
+          message: "User Name not set: user not found",
+          data: null,
+        });
+      res.json({
+        status: "Success",
+        message: "User's UserName updated!",
+        data: user,
+      });
+    } catch (err) {
+      errHandler(err, res);
+    }
+  },
+  setUserCountry: async (req, res) => {
+    try {
+      const user = await userModel.findOneAndUpdate(
+        { _id: req.params.id },
+        { country: req.body.country },
+        { new: true, runValidators: true }
+      );
 
-            if (!user)
-                return res.status(404).json({
-                    status: "Failed",
-                    message: "User Name not set: user not found",
-                    data: null
-                });
-            res.json({
-                status: "Success",
-                message: "User's UserName updated!",
-                data: user
-            });
-        } catch (err) {
-            errHandler(err, res);
-        }
-    },
-    setUserCountry: async (req, res) => {
-        try {
-            const user = await userModel
-                .findOneAndUpdate(
-                    { _id: req.params.id },
-                    { country: req.body.country },
-                    { new: true, runValidators: true }
-                );
-
-            if (!user)
-                return res.status(404).json({
-                    status: "Failed",
-                    message: "Country not set: user not found",
-                    data: null
-                });
-            res.json({
-                status: "Success",
-                message: "User country updated!",
-                data: user
-            });
-        } catch (err) {
-            errHandler(err, res);
-        }
-    },
+      if (!user)
+        return res.status(404).json({
+          status: "Failed",
+          message: "Country not set: user not found",
+          data: null,
+        });
+      res.json({
+        status: "Success",
+        message: "User country updated!",
+        data: user,
+      });
+    } catch (err) {
+      errHandler(err, res);
+    }
+  },
   getUserPhone: async (req, res) => {
     try {
       const user = await userModel.findOne({
         _id: req.params.id,
-        creatorId: req.user._id
+        creatorId: req.user._id,
       });
       if (!user)
         return res

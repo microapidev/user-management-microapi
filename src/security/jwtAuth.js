@@ -21,8 +21,8 @@ const decodeToken = (token) => {
 };
 
 const generateApiKey = () => {
-  return RandomToken.gen({ length: 60 });
-};
+    return RandomToken.gen({ length: 60 });
+}
 
 module.exports = {
   createToken: createToken,
