@@ -2465,6 +2465,14 @@ const openApiDocumentation = {
           address: {
             type: "string",
           },
+          country: {
+            type: "string",
+            description: "User Country",
+          },
+          userName: {
+            type: "string",
+            description: "User Username",
+          },
         },
       },
       Company: {
